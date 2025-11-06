@@ -12,6 +12,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Atrapaformas">
         <activity
+            android:name=".JuegoDificilActivity"
+            android:exported="false" />
+        <activity
+            android:name=".JuegoMedioActivity"
+            android:exported="false" />
+        <activity
+            android:name=".JuegoFacilActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LoginActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
