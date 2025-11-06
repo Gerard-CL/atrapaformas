@@ -12,6 +12,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Atrapaformas">
         <activity
+            android:name=".RankingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".FinReinicioActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
