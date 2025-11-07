@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">atrapaformas</string>
+    <string name="logo_atrapaformas">Logo Atrapaformas</string>
+    <string name="boton_jugar">Botón para comenzar a jugar</string>
+    <string name="nombre_jugador">Nombre del jugador</string>
+    <string name="elige_nivel">Elige el nivel:</string>
+    <string name="nivel_facil">Nivel fácil</string>
+    <string name="nivel_medio">Nivel medio</string>
+    <string name="nivel_dificil">Nivel difícil</string>
+    <string name="continuar">Continuar</string>
 </resources>
