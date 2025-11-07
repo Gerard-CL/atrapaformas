@@ -1,10 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LoginActivity">
+    android:background="@drawable/fondo_atrapaformas"
+    android:padding="24dp">
+
+    <!-- Campo de texto para el nombre del jugador -->
+
+    <!-- Texto "Elige el nivel:" -->
+
+    <!-- ImageButton Nivel Fácil -->
+
+    <!-- ImageButton Nivel Medio -->
+
+    <!-- ImageButton Nivel Difícil -->
+
+    <ImageButton
+        android:id="@+id/button_continuar"
+        android:layout_width="1025dp"
+        android:layout_height="171dp"
+        android:layout_marginTop="68dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:padding="16dp"
+        android:src="@drawable/button_continuar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_medio" />
+
+    <ImageButton
+        android:id="@+id/button_facil"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="28dp"
+        android:background="?attr/selectableItemBackground"
+        android:scaleType="fitCenter"
+        android:src="@drawable/button_facil"
+        app:layout_constraintEnd_toStartOf="@+id/button_medio"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvEligeNivel" />
+
+    <EditText
+        android:id="@+id/NombreJugador"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/rounded_edittext"
+        android:hint="@string/nombre_jugador"
+        android:inputType="textPersonName"
+        android:padding="16dp"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_max="400dp" />
+
+    <ImageButton
+        android:id="@+id/button_dificil"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="20dp"
+        android:background="?attr/selectableItemBackground"
+        android:contentDescription="@string/nivel_dificil"
+        android:scaleType="fitCenter"
+        android:src="@drawable/button_dificil"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/button_medio"
+        app:layout_constraintTop_toTopOf="@+id/button_facil" />
+
+    <TextView
+        android:id="@+id/tvEligeNivel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="64dp"
+        android:text="@string/elige_nivel"
+        android:textColor="#1976D2"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/NombreJugador" />
+
+    <ImageButton
+        android:id="@+id/button_medio"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="16dp"
+        android:background="?attr/selectableItemBackground"
+        android:scaleType="fitCenter"
+        android:src="@drawable/button_medio"
+        app:layout_constraintEnd_toStartOf="@+id/button_dificil"
+        app:layout_constraintStart_toEndOf="@+id/button_facil"
+        app:layout_constraintTop_toTopOf="@+id/button_facil" />
+
+
+    <!-- ImageButton Continuar -->
 
 </androidx.constraintlayout.widget.ConstraintLayout>
