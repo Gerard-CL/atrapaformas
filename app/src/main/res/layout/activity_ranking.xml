@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#87CEEB">
+    android:background="@drawable/fondo_atrapaformas">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/ranking_panel"
@@ -13,7 +13,7 @@
         android:layout_height="800dp"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
-        android:background="#3F51B5"
+        android:background="#53B8E3"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -195,75 +195,5 @@
             app:layout_constraintBottom_toBottomOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <ImageView
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:src="@drawable/ic_sun"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:contentDescription="Sol" />
-
-    <ImageView
-        android:layout_width="120dp"
-        android:layout_height="80dp"
-        android:src="@drawable/ic_cloud"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginStart="80dp"
-        android:layout_marginTop="40dp"
-        android:contentDescription="Nube" />
-
-    <ImageView
-        android:layout_width="100dp"
-        android:layout_height="70dp"
-        android:src="@drawable/ic_cloud"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="80dp"
-        android:contentDescription="Nube" />
-
-    <ImageView
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:src="@drawable/shape_blue_square"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="200dp"
-        android:contentDescription="Cuadrado Azul" />
-
-    <ImageView
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:src="@drawable/shape_orange_diamond"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginEnd="80dp"
-        android:layout_marginTop="60dp"
-        android:contentDescription="Diamante Naranja" />
-
-    <ImageView
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:src="@drawable/shape_green_triangle"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="120dp"
-        android:contentDescription="Triángulo Verde" />
-
-    <ImageView
-        android:layout_width="55dp"
-        android:layout_height="55dp"
-        android:src="@drawable/shape_red_circle"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="120dp"
-        android:contentDescription="Círculo Rojo" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
