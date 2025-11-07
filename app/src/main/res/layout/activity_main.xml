@@ -8,10 +8,6 @@
      android:background="@drawable/fondo_atrapaformas">
 
 
-    <!-- Logo - ImageView encima del botón -->
-
-    <!-- Botón de jugar - ImageButton centrado abajo -->
-
     <ImageView
         android:id="@+id/logo_atrapaformas"
         android:layout_width="966dp"
@@ -21,24 +17,23 @@
         android:layout_marginBottom="24dp"
         android:contentDescription="@drawable/logo_atrapaformas"
         android:scaleType="fitCenter"
-        app:layout_constraintBottom_toTopOf="@+id/btnJugar"
+        app:layout_constraintBottom_toTopOf="@+id/button_jugar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.225"
+        app:layout_constraintVertical_bias="0.41"
         tools:src="@drawable/logo_atrapaformas" />
 
     <ImageButton
-        android:id="@+id/btnJugar"
+        android:id="@+id/button_jugar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="48dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription=""
+        android:contentDescription="@drawable/button_jugar"
         android:padding="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:src="@android:drawable/ic_media_play" />
+        tools:src="@drawable/button_jugar" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
