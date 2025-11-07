@@ -1,21 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background=""
-    tools:context=".MainActivity">
+     android:background="@drawable/fondo_atrapaformas">
+
+
+    <!-- Logo - ImageView encima del botón -->
+
+    <!-- Botón de jugar - ImageButton centrado abajo -->
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/logo_atrapaformas"
+        android:layout_width="966dp"
+        android:layout_height="424dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="24dp"
+        android:contentDescription="@drawable/logo_atrapaformas"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toTopOf="@+id/btnJugar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.225"
+        tools:src="@drawable/logo_atrapaformas" />
+
+    <ImageButton
+        android:id="@+id/btnJugar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
+        android:layout_marginBottom="48dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription=""
+        android:padding="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        tools:src="@android:drawable/ic_media_play" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
