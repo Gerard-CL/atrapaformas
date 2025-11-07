@@ -9,8 +9,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/ranking_panel"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_width="500dp"
+        android:layout_height="800dp"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
         android:background="#3F51B5"
@@ -36,7 +36,7 @@
 
         <LinearLayout
             android:id="@+id/ranking_list_container"
-            android:layout_width="match_parent"
+            android:layout_width="450dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_marginTop="16dp"
@@ -184,7 +184,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="JUGAR DE NUEVO"
-            android:background="@drawable/button_green_rounded" android:textColor="@android:color/white"
+            app:backgroundTint="#B8D37D" android:textColor="@android:color/white"
             android:textSize="18sp"
             android:paddingHorizontal="32dp"
             android:paddingVertical="12dp"
