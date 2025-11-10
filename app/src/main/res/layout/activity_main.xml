@@ -10,30 +10,30 @@
 
     <ImageView
         android:id="@+id/logo_atrapaformas"
-        android:layout_width="966dp"
-        android:layout_height="424dp"
+        android:layout_width="773dp"
+        android:layout_height="295dp"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
         android:layout_marginBottom="24dp"
-        android:contentDescription="@drawable/logo_atrapaformas"
         android:scaleType="fitCenter"
+        android:src="@drawable/logo_atrapaformas"
         app:layout_constraintBottom_toTopOf="@+id/button_jugar"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.573"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.41"
-        tools:src="@drawable/logo_atrapaformas" />
+        app:layout_constraintVertical_bias="0.513" />
 
     <ImageButton
         android:id="@+id/button_jugar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="48dp"
-        android:contentDescription="@drawable/button_jugar"
+        android:layout_width="242dp"
+        android:layout_height="252dp"
+        android:layout_marginBottom="56dp"
+        android:background="@android:color/transparent"
         android:padding="16dp"
+        android:src="@drawable/button_jugar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:src="@drawable/button_jugar" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
