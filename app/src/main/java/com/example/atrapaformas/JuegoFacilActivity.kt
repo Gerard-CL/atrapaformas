@@ -3,7 +3,9 @@ package com.example.atrapaformas
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
+import android.annotation.SuppressLint
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -11,6 +13,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.ViewCompat
@@ -54,6 +57,7 @@ class JuegoFacilActivity : AppCompatActivity() {
     // ===========================================
     // 2. CICLO DE VIDA - onCreate
     // ===========================================
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_juego_facil)
@@ -126,6 +130,7 @@ class JuegoFacilActivity : AppCompatActivity() {
 
         // Game loop: crear objetos que caen
         val gameLoop = object : Runnable {
+            @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
             override fun run() {
                 if (!isJuegoActivo) return
                 crearObjetoQueCae()
@@ -144,39 +149,41 @@ class JuegoFacilActivity : AppCompatActivity() {
     // ===========================================
     // 6. CREACIÓN Y ANIMACIÓN DE OBJETOS
     // ===========================================
+    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     private fun crearObjetoQueCae() {
         val objeto = ImageView(this)
 
-        // Seleccionar imagen aleatoria
         val imagenParaCaerId = imagenesJuego[random.nextInt(imagenesJuego.size)]
         objeto.setImageResource(imagenParaCaerId)
         objeto.tag = imagenParaCaerId
 
-        // Configurar tamaño
         val tamanoEnPx = (150 * resources.displayMetrics.density).toInt()
         val params = ConstraintLayout.LayoutParams(tamanoEnPx, tamanoEnPx)
         objeto.layoutParams = params
 
-        // Posicionar y agregar al contenedor
         cieloContainer.post {
-            val startX = random.nextInt(0, cieloContainer.width - tamanoEnPx)
+            // --- INICIO DE LA SOLUCIÓN ---
+
+            // 1. Calcula el rango máximo de forma segura
+            val maxWidth = cieloContainer.width - tamanoEnPx
+
+            // 2. Comprueba si el rango es válido
+            // Si el contenedor es demasiado pequeño o aún no se ha medido (width=0),
+            // simplemente no añadas este objeto y espera al siguiente ciclo.
+            if (maxWidth <= 0) {
+                return@post // Salir del bloque 'post' de forma segura
+            }
+
+            // 3. Ahora SÍ es seguro generar el número aleatorio
+            val startX = random.nextInt(0, maxWidth)
+
+            // --- FIN DE LA SOLUCIÓN ---
+
             objeto.x = startX.toFloat()
             objeto.y = 0f
 
-            // Configurar click listener
             objeto.setOnClickListener { view ->
-                if (!isJuegoActivo) return@setOnClickListener
-
-                cieloContainer.removeView(view)
-
-                // Verificar si es el objetivo correcto
-                if (view.tag as Int == currentTargetDrawableId) {
-                    sumarPuntos(10)
-                    // Opcional: cambiar objetivo cada ciertos puntos
-                    // if (puntos % 50 == 0) establecerNuevaFormaObjetivo()
-                } else {
-                    restarVida()
-                }
+                // ... (tu código de click listener)
             }
 
             cieloContainer.addView(objeto)
