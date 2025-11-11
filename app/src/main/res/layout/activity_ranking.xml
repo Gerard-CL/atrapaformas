@@ -13,7 +13,7 @@
         android:layout_height="800dp"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
-        android:background="#53B8E3"
+        android:background="@drawable/fondo_puntuacion_azul"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -61,14 +61,14 @@
                     android:layout_weight="1"
                     android:text="Usuario1"
                     android:textColor="@android:color/white"
-                    android:textSize="20sp"
+                    android:textSize="40sp"
                     android:layout_marginStart="8dp" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="520"
                     android:textColor="@android:color/white"
-                    android:textSize="20sp" />
+                    android:textSize="40sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -87,14 +87,14 @@
                     android:layout_weight="1"
                     android:text="Usuario2"
                     android:textColor="@android:color/white"
-                    android:textSize="20sp"
+                    android:textSize="40sp"
                     android:layout_marginStart="8dp" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="496"
                     android:textColor="@android:color/white"
-                    android:textSize="20sp" />
+                    android:textSize="40sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -113,14 +113,14 @@
                     android:layout_weight="1"
                     android:text="Usuario3"
                     android:textColor="@android:color/white"
-                    android:textSize="20sp"
+                    android:textSize="40sp"
                     android:layout_marginStart="8dp" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="399"
                     android:textColor="@android:color/white"
-                    android:textSize="20sp" />
+                    android:textSize="40sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -141,13 +141,13 @@
                 android:layout_weight="1"
                 android:text="Usuario4"
                 android:textColor="@android:color/white"
-                android:textSize="20sp" />
+                android:textSize="40sp" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="398"
                     android:textColor="@android:color/white"
-                    android:textSize="20sp" />
+                    android:textSize="40sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -168,13 +168,13 @@
                 android:layout_weight="1"
                 android:text="Usuario5"
                 android:textColor="@android:color/white"
-                android:textSize="20sp" />
+                android:textSize="40sp" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="152"
                     android:textColor="@android:color/white"
-                    android:textSize="20sp" />
+                    android:textSize="40sp" />
             </LinearLayout>
 
         </LinearLayout>
