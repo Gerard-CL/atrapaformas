@@ -11,11 +11,14 @@
 
 
     <!-- Campo de texto para el nombre del jugador -->
+
+
+    <!-- Texto "Elige el nivel:" -->
     <EditText
         android:id="@+id/NombreJugador"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="132dp"
+        android:layout_marginTop="216dp"
         android:background="@drawable/rounded_edittext"
         android:hint="@string/nombre_jugador"
         android:inputType="textPersonName"
@@ -27,12 +30,12 @@
         app:layout_constraintWidth_max="400dp" />
 
 
-    <!-- Texto "Elige el nivel:" -->
+    <!-- ImageButton Nivel Fácil -->
     <TextView
         android:id="@+id/tvEligeNivel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="56dp"
         android:text="@string/elige_nivel"
         android:textColor="#1976D2"
         android:textSize="20sp"
@@ -42,12 +45,12 @@
         app:layout_constraintTop_toBottomOf="@+id/NombreJugador" />
 
 
-    <!-- ImageButton Nivel Fácil -->
+    <!-- ImageButton Nivel Medio -->
     <ImageButton
         android:id="@+id/button_facil"
         android:layout_width="243dp"
         android:layout_height="119dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="76dp"
         android:layout_marginEnd="8dp"
         android:background="?attr/selectableItemBackground"
         android:scaleType="fitCenter"
@@ -57,8 +60,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvEligeNivel" />
 
-
-    <!-- ImageButton Nivel Medio -->
     <ImageButton
         android:id="@+id/button_medio"
         android:layout_width="243dp"
@@ -93,18 +94,5 @@
         app:layout_constraintVertical_bias="1.0" />
 
 
-    <!-- ImageButton Continuar -->
-    <ImageButton
-        android:id="@+id/button_continuar"
-        android:layout_width="360dp"
-        android:layout_height="87dp"
-        android:layout_marginTop="32dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:padding="16dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/button_continuar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_medio" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
