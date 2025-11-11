@@ -98,7 +98,7 @@ class JuegoMedioActivity : AppCompatActivity() {
         objeto.setImageResource(imagenParaCaerId)
         objeto.tag = imagenParaCaerId // Guardamos el ID de la imagen en el tag para identificarla
 
-        val tamanoEnPx = (100 * resources.displayMetrics.density).toInt()
+        val tamanoEnPx = (150 * resources.displayMetrics.density).toInt()
         val params = ConstraintLayout.LayoutParams(tamanoEnPx, tamanoEnPx)
         objeto.layoutParams = params
 
@@ -133,7 +133,7 @@ class JuegoMedioActivity : AppCompatActivity() {
         val alturaSuelo = cieloContainer.height.toFloat()
 
         val animator = ObjectAnimator.ofFloat(objeto, "translationY", 0f, alturaSuelo)
-        animator.duration = 3000
+        animator.duration = 4000
 
         animator.addListener(object : AnimatorListenerAdapter() {
             override fun onAnimationEnd(animation: Animator) {
