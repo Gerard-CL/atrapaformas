@@ -153,7 +153,7 @@ class JuegoFacilActivity : AppCompatActivity() {
         objeto.tag = imagenParaCaerId
 
         // Configurar tamaño
-        val tamanoEnPx = (100 * resources.displayMetrics.density).toInt()
+        val tamanoEnPx = (150 * resources.displayMetrics.density).toInt()
         val params = ConstraintLayout.LayoutParams(tamanoEnPx, tamanoEnPx)
         objeto.layoutParams = params
 

@@ -133,7 +133,7 @@ class JuegoDificilActivity : AppCompatActivity() {
         val alturaSuelo = cieloContainer.height.toFloat()
 
         val animator = ObjectAnimator.ofFloat(objeto, "translationY", 0f, alturaSuelo)
-        animator.duration = 3000
+        animator.duration = 4000
 
         animator.addListener(object : AnimatorListenerAdapter() {
             override fun onAnimationEnd(animation: Animator) {
