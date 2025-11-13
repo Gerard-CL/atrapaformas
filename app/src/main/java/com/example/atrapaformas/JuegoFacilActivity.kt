@@ -37,7 +37,7 @@ class JuegoFacilActivity : AppCompatActivity() {
     private var currentTargetDrawableId: Int = 0
     private val gameHandler = Handler(Looper.getMainLooper())
     private val random = Random()
-    private var instructionsOverlay: View? = null
+
 
     private val imagenesJuego = listOf(
         R.drawable.cuadrado_formas,
@@ -67,8 +67,6 @@ class JuegoFacilActivity : AppCompatActivity() {
         // Cargar récord (placeholder)
         record = 112
 
-        // Mostrar overlay de instrucciones
-        showInstructionsOverlay()
 
         // Esperar a que el layout esté listo antes de iniciar el juego
         cieloContainer.post {
@@ -89,29 +87,7 @@ class JuegoFacilActivity : AppCompatActivity() {
         tvPuntos.text = "PUNTOS: $puntos"
     }
 
-    // ===============================
-    // 4. OVERLAY DE INSTRUCCIONES
-    // ===============================
-    private fun showInstructionsOverlay() {
-        val rootView = findViewById<View>(android.R.id.content)
-        val overlay = LayoutInflater.from(this)
-            .inflate(R.layout.instructions_overlay, rootView as? ViewGroup, false)
 
-        overlay.setOnClickListener {
-            hideInstructionsOverlay()
-        }
-
-        (rootView as? ViewGroup)?.addView(overlay)
-        instructionsOverlay = overlay
-    }
-
-    private fun hideInstructionsOverlay() {
-        instructionsOverlay?.let { overlay ->
-            val rootView = findViewById<ViewGroup>(android.R.id.content)
-            rootView.removeView(overlay)
-            instructionsOverlay = null
-        }
-    }
 
     // ===============================
     // 5. INICIAR EL JUEGO
