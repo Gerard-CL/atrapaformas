@@ -122,10 +122,34 @@ class JuegoFacilActivity : AppCompatActivity() {
         val gameLoop = object : Runnable {
             override fun run() {
                 if (!isJuegoActivo) return
-                crearObjetoQueCae()
-                gameHandler.postDelayed(this, 1500) // Cada 1.5s
+
+                // --- NUEVO: Decidir cuántos objetos crear esta vez ---
+                // Esto generará 1 o 2 objetos en cada oleada
+                val numeroDeObjetos = random.nextInt(2) + 1
+
+                for (i in 1..numeroDeObjetos) {
+
+                    // --- NUEVO: Pequeño retraso para objetos múltiples ---
+                    // Si i=1, el retraso es 0.
+                    // Si i=2, el retraso es 200ms.
+                    // Esto evita que los dos objetos aparezcan exactamente en el mismo
+                    // lugar y al mismo tiempo, dándoles una ligera separación.
+                    val retrasoSpawn = (i - 1) * 200L
+
+                    gameHandler.postDelayed({
+                                                if (isJuegoActivo) {
+                                                    crearObjetoQueCae()
+                                                }
+                                            }, retrasoSpawn)
+                }
+
+                // --- NUEVO: Siguiente oleada en un tiempo aleatorio ---
+                // Genera la próxima oleada de figuras entre 0.8 y 1.8 segundos (800 + 1000)
+                val proximoDelay = (3000).toLong()
+                gameHandler.postDelayed(this, proximoDelay)
             }
         }
+        // Inicia el loop la primera vez sin demora
         gameHandler.post(gameLoop)
     }
 
@@ -219,6 +243,6 @@ class JuegoFacilActivity : AppCompatActivity() {
                                                         intent.putExtra("RECORD_ACTUAL", record)
                                                         startActivity(intent)
                                                         finish()
-                                                    }, 2000)
+                                                    }, 0)
     }
 }
