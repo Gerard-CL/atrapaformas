@@ -56,7 +56,6 @@
         android:textStyle="bold"
 
         android:background="@drawable/fondo_puntuacion_azul"
-
         android:paddingHorizontal="40dp"
         android:paddingVertical="8dp"
 

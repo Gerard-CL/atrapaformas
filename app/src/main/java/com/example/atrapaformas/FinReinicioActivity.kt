@@ -3,6 +3,7 @@ package com.example.atrapaformas
 import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageButton
+import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -15,6 +16,13 @@ class FinReinicioActivity : AppCompatActivity() {
         setContentView(R.layout.activity_fin_reinicio)
         val botonRanking: ImageButton = findViewById(R.id.btn_ver_ranking)
         val botonJugar: ImageButton = findViewById(R.id.btn_play_again)
+        val puntosRecibidos = intent.getIntExtra("PUNTUACION_FINAL", 0)
+        val recordRecibido = intent.getIntExtra("RECORD_ACTUAL", 0)
+
+        val textViewPuntuacion: TextView =findViewById(R.id.puntuacion)
+
+// 2. Asigna el valor (convertido a String)
+        textViewPuntuacion.text = puntosRecibidos.toString()
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
