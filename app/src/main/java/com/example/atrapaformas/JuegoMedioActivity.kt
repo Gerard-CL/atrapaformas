@@ -43,6 +43,16 @@ class JuegoMedioActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_juego_facil)
 
+        val nombreRecibido = intent.getStringExtra("NOMBRE_JUGADOR")
+
+        // 2. Buscar el TextView en tu layout
+        // (Asegúrate de que este ID exista en tu XML)
+        val textViewNombre = findViewById<TextView>(R.id.tv_usuario)
+
+        // 3. Mostrar el nombre en el TextView
+        // (Usamos ?: "Jugador" por si el nombre llega vacío)
+        textViewNombre.text = nombreRecibido ?: "Jugador"
+
         // Conectamos las vistas
         tvVidas = findViewById(R.id.tv_vidas)
         tvPuntos = findViewById(R.id.tv_puntos)

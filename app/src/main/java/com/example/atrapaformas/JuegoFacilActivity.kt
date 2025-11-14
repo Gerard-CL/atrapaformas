@@ -54,6 +54,16 @@ class JuegoFacilActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_juego_facil)
 
+        val nombreRecibido = intent.getStringExtra("NOMBRE_JUGADOR")
+
+        // 2. Buscar el TextView en tu layout
+        // (Asegúrate de que este ID exista en tu XML)
+        val textViewNombre = findViewById<TextView>(R.id.tv_usuario)
+
+        // 3. Mostrar el nombre en el TextView
+        // (Usamos ?: "Jugador" por si el nombre llega vacío)
+        textViewNombre.text = nombreRecibido ?: "Jugador"
+
         // Ajuste de window insets
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.cielo_container)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())

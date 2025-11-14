@@ -6,7 +6,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/fondo_atrapaformas"
+    android:background="@drawable/fondo_basico"
     android:padding="24dp">
 
 
@@ -14,55 +14,38 @@
 
 
     <!-- Texto "Elige el nivel:" -->
-    <EditText
-        android:id="@+id/NombreJugador"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="216dp"
-        android:background="@drawable/rounded_edittext"
-        android:hint="@string/nombre_jugador"
-        android:inputType="textPersonName"
-        android:padding="16dp"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth_max="400dp" />
 
 
     <!-- ImageButton Nivel Fácil -->
-    <TextView
-        android:id="@+id/tvEligeNivel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="56dp"
-        android:text="@string/elige_nivel"
-        android:textColor="#1976D2"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/NombreJugador" />
 
 
     <!-- ImageButton Nivel Medio -->
-    <ImageButton
-        android:id="@+id/button_facil"
-        android:layout_width="243dp"
-        android:layout_height="119dp"
-        android:layout_marginTop="76dp"
-        android:layout_marginEnd="8dp"
-        android:background="?attr/selectableItemBackground"
-        android:scaleType="fitCenter"
-        android:src="@drawable/button_facil"
-        app:layout_constraintEnd_toStartOf="@+id/button_medio"
-        app:layout_constraintHorizontal_chainStyle="spread"
+
+
+    <!-- ImageButton Nivel Difícil -->
+
+    <TextView
+        android:id="@+id/tvIndicatuNombre"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="¿Cómo te llamas?"
+        android:textColor="#0B4F9C"
+        android:textSize="90sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvEligeNivel" />
+        app:layout_constraintTop_toTopOf="parent"
+
+        android:shadowColor="#FFFFFF"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:shadowRadius="15" />
 
     <ImageButton
         android:id="@+id/button_medio"
-        android:layout_width="243dp"
+        android:layout_width="303dp"
         android:layout_height="119dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
@@ -76,11 +59,9 @@
         app:layout_constraintTop_toTopOf="@+id/button_facil"
         app:layout_constraintVertical_bias="1.0" />
 
-
-    <!-- ImageButton Nivel Difícil -->
     <ImageButton
         android:id="@+id/button_dificil"
-        android:layout_width="243dp"
+        android:layout_width="303dp"
         android:layout_height="119dp"
         android:layout_marginStart="8dp"
         android:background="?attr/selectableItemBackground"
@@ -93,6 +74,54 @@
         app:layout_constraintTop_toTopOf="@+id/button_facil"
         app:layout_constraintVertical_bias="1.0" />
 
+    <ImageButton
+        android:id="@+id/button_facil"
+        android:layout_width="343dp"
+        android:layout_height="119dp"
+        android:layout_marginTop="84dp"
+        android:layout_marginEnd="8dp"
+        android:background="?attr/selectableItemBackground"
+        android:scaleType="fitCenter"
+        android:src="@drawable/button_facil"
+        app:layout_constraintEnd_toStartOf="@+id/button_medio"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvEligeNivel" />
+
+    <TextView
+        android:id="@+id/tvEligeNivel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="128dp"
+        android:text="@string/elige_nivel"
+        android:textSize="50sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/NombreJugador"
+
+        android:textColor="#0B4F9C"
+
+        android:shadowColor="#FFFFFF"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:shadowRadius="10" />
+
+    <EditText
+        android:id="@+id/NombreJugador"
+        android:layout_width="505dp"
+        android:layout_height="77dp"
+        android:layout_marginTop="164dp"
+        android:background="@drawable/rounded_edittext"
+        android:hint="@string/nombre_jugador"
+        android:inputType="textPersonName"
+        android:padding="16dp"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_max="400dp" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
