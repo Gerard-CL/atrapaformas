@@ -1,6 +1,7 @@
 package com.example.atrapaformas
 
 import android.content.Intent
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,11 +17,21 @@ import androidx.core.view.WindowInsetsCompat
 class LoginActivity : AppCompatActivity() {
     private var instructionsOverlay: View? = null
     private lateinit var gestorJugadores: GestorJugadores
+    private var mediaPlayer: MediaPlayer? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_login)
+
+        mediaPlayer = MediaPlayer.create(this, R.raw.musicainicio)
+
+// Configuramos para que se repita infinitamente
+        mediaPlayer?.isLooping = true
+
+// Arrancamos la música
+        mediaPlayer?.start()
 
         gestorJugadores = GestorJugadores("${filesDir.path}/jugadores.json")
         val button_facil = findViewById<ImageButton>(R.id.button_facil)
@@ -79,6 +90,27 @@ class LoginActivity : AppCompatActivity() {
                 Toast.makeText(this, "¡Debes ingresar un nombre!", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        // Pausar si el usuario minimiza la app
+        mediaPlayer?.pause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Reanudar si el usuario vuelve
+        if (mediaPlayer?.isPlaying == false) {
+            mediaPlayer?.start()
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        // Liberar memoria al cerrar la app completamente
+        mediaPlayer?.release()
+        mediaPlayer = null
     }
 
     // ===============================

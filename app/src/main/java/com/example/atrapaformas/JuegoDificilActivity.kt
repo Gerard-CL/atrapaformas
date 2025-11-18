@@ -1,5 +1,6 @@
 package com.example.atrapaformas
 
+import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
 import android.content.Intent
@@ -7,8 +8,10 @@ import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog // Necesario para la ventana emergente
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import java.util.Random
@@ -21,10 +24,16 @@ class JuegoDificilActivity : AppCompatActivity() {
     private var record = 0
     private var isJuegoActivo = true
 
+    // --- NUEVO: Variable de estado de pausa
+    private var isPausado = false
+
     private lateinit var tvVidas: TextView
     private lateinit var tvPuntos: TextView
     private lateinit var ivTargetShape: ImageView
     private lateinit var cieloContainer: ConstraintLayout
+
+    // --- NUEVO: Botón de pausa
+    private lateinit var btnPause: View
 
     private var currentTargetDrawableId: Int = 0
 
@@ -33,6 +42,11 @@ class JuegoDificilActivity : AppCompatActivity() {
 
     private var mediaPlayer: MediaPlayer? = null
 
+    // --- NUEVO: Lista para controlar animaciones activas
+    private val animadoresActivos = mutableListOf<ObjectAnimator>()
+
+    // --- NUEVO: Runnable global
+    private lateinit var gameLoop: Runnable
 
     private val imagenesJuego = listOf(
         R.drawable.cuadrado_formas,
@@ -44,26 +58,16 @@ class JuegoDificilActivity : AppCompatActivity() {
     // --- 2. Método Principal ---
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        // OJO: Estás usando el layout de 'juego_facil', asegúrate que tiene el botón de pausa
         setContentView(R.layout.activity_juego_facil)
 
         mediaPlayer = MediaPlayer.create(this, R.raw.fondomusica1)
-
-// Configuramos para que se repita infinitamente
         mediaPlayer?.isLooping = true
-
-// Arrancamos la música
         mediaPlayer?.start()
+
         val nombreRecibido = intent.getStringExtra("NOMBRE_JUGADOR")
-
-        // 2. Buscar el TextView en tu layout
-        // (Asegúrate de que este ID exista en tu XML)
         val textViewNombre = findViewById<TextView>(R.id.tv_usuario)
-
-        // 3. Mostrar el nombre en el TextView
-        // (Usamos ?: "Jugador" por si el nombre llega vacío)
         textViewNombre.text = nombreRecibido ?: "Jugador"
-
 
         // Conectar vistas
         tvVidas = findViewById(R.id.tv_vidas)
@@ -71,72 +75,129 @@ class JuegoDificilActivity : AppCompatActivity() {
         ivTargetShape = findViewById(R.id.iv_target_shape)
         cieloContainer = findViewById(R.id.cielo_container)
 
+        // --- NUEVO: Configurar botón de pausa
+        btnPause = findViewById(R.id.button_pause)
+        btnPause.setOnClickListener {
+            mostrarDialogoPausa()
+        }
+
         tvVidas.text = "VIDAS: $vidas"
         tvPuntos.text = "PUNTOS: $puntos"
 
-        record = 112 // Ejemplo de récord
+        record = 112
 
+        // Definimos el loop y arrancamos
+        definirGameLoop()
         iniciarJuego()
+    }
+
+    // --- NUEVO: Lógica del Menú de Pausa ---
+    private fun mostrarDialogoPausa() {
+        if (!isJuegoActivo) return
+
+        pausarLogicaJuego()
+
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Juego Pausado")
+        builder.setMessage("¿Qué deseas hacer?")
+        builder.setCancelable(false)
+
+        builder.setPositiveButton("Reanudar") { dialog, _ ->
+            reanudarLogicaJuego()
+            dialog.dismiss()
+        }
+
+        builder.setNegativeButton("Salir") { dialog, _ ->
+            finish()
+        }
+
+        val dialog = builder.create()
+        dialog.show()
+    }
+
+    private fun pausarLogicaJuego() {
+        isPausado = true
+        if (mediaPlayer?.isPlaying == true) {
+            mediaPlayer?.pause()
+        }
+        // Detener generación
+        gameHandler.removeCallbacks(gameLoop)
+        gameHandler.removeCallbacksAndMessages(null)
+
+        // Congelar figuras cayendo
+        for (anim in animadoresActivos) {
+            if (anim.isRunning) {
+                anim.pause()
+            }
+        }
+    }
+
+    private fun reanudarLogicaJuego() {
+        isPausado = false
+        mediaPlayer?.start()
+
+        // Reanudar figuras
+        for (anim in animadoresActivos) {
+            if (anim.isPaused) {
+                anim.resume()
+            }
+        }
+        // Reanudar generación
+        gameHandler.post(gameLoop)
     }
 
     override fun onPause() {
         super.onPause()
-        // Pausar si el usuario minimiza la app
-        mediaPlayer?.pause()
+        if (isJuegoActivo && !isPausado) {
+            pausarLogicaJuego()
+        }
     }
 
     override fun onResume() {
         super.onResume()
-        // Reanudar si el usuario vuelve
-        if (mediaPlayer?.isPlaying == false) {
-            mediaPlayer?.start()
+        if (isJuegoActivo && isPausado) {
+            mostrarDialogoPausa()
         }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        // Liberar memoria al cerrar la app completamente
         mediaPlayer?.release()
         mediaPlayer = null
+        animadoresActivos.clear()
     }
 
     // --- 3. Game Loop ---
-    private fun iniciarJuego() {
-        establecerNuevaFormaObjetivo()
 
-        val gameLoop = object : Runnable {
+    // --- NUEVO: Definimos el Runnable fuera
+    private fun definirGameLoop() {
+        gameLoop = object : Runnable {
             override fun run() {
-                if (!isJuegoActivo) return
+                if (!isJuegoActivo || isPausado) return
 
-                // --- NUEVO: Decidir cuántos objetos crear esta vez ---
-                // Esto generará 1 o 2 objetos en cada oleada
                 val numeroDeObjetos = random.nextInt(2) + 1
 
                 for (i in 1..numeroDeObjetos) {
-
-                    // --- NUEVO: Pequeño retraso para objetos múltiples ---
-                    // Si i=1, el retraso es 0.
-                    // Si i=2, el retraso es 200ms.
-                    // Esto evita que los dos objetos aparezcan exactamente en el mismo
-                    // lugar y al mismo tiempo, dándoles una ligera separación.
                     val retrasoSpawn = (i - 1) * 200L
-
                     gameHandler.postDelayed({
-                                                if (isJuegoActivo) {
+                                                if (isJuegoActivo && !isPausado) {
                                                     crearObjetoQueCae()
                                                 }
                                             }, retrasoSpawn)
                 }
 
-                // --- NUEVO: Siguiente oleada en un tiempo aleatorio ---
-                // Genera la próxima oleada de figuras entre 0.8 y 1.8 segundos (800 + 1000)
+                // VELOCIDAD DIFICIL: 1.5 segundos entre oleadas
                 val proximoDelay = (1500).toLong()
                 gameHandler.postDelayed(this, proximoDelay)
             }
         }
-        // Inicia el loop la primera vez sin demora
+    }
+
+    private fun iniciarJuego() {
+        establecerNuevaFormaObjetivo()
         gameHandler.post(gameLoop)
     }
+
     private fun establecerNuevaFormaObjetivo() {
         val nuevaFormaId = imagenesJuego[random.nextInt(imagenesJuego.size)]
         ivTargetShape.setImageResource(nuevaFormaId)
@@ -154,14 +215,17 @@ class JuegoDificilActivity : AppCompatActivity() {
         objeto.layoutParams = ConstraintLayout.LayoutParams(tamanoEnPx, tamanoEnPx)
 
         cieloContainer.post {
-            // --- CORRECCIÓN PRINCIPAL ---
+            if (cieloContainer.width <= 0) return@post
+
             val maxWidth = (cieloContainer.width - tamanoEnPx).coerceAtLeast(1)
             val startX = random.nextInt(maxWidth)
             objeto.x = startX.toFloat()
             objeto.y = 0f
 
             objeto.setOnClickListener { view ->
-                if (!isJuegoActivo) return@setOnClickListener
+                // --- NUEVO: Bloquear clic si está pausado
+                if (!isJuegoActivo || isPausado) return@setOnClickListener
+
                 cieloContainer.removeView(view)
 
                 if (view.tag as Int == currentTargetDrawableId) {
@@ -180,14 +244,22 @@ class JuegoDificilActivity : AppCompatActivity() {
     private fun animarCaida(objeto: ImageView) {
         val alturaSuelo = cieloContainer.height.toFloat()
         val animator = ObjectAnimator.ofFloat(objeto, "translationY", 0f, alturaSuelo)
+
+        // VELOCIDAD DIFICIL: 2.5 segundos en caer
         animator.duration = 2500
 
+        // --- NUEVO: Añadir a lista
+        animadoresActivos.add(animator)
+
         animator.addListener(object : AnimatorListenerAdapter() {
-            override fun onAnimationEnd(animation: android.animation.Animator) {
+            override fun onAnimationEnd(animation: Animator) { // Corrección del tipo Animator
+                // --- NUEVO: Remover de lista
+                animadoresActivos.remove(animation)
+
                 if (cieloContainer.indexOfChild(objeto) != -1) {
                     cieloContainer.removeView(objeto)
                     if (objeto.tag as Int == currentTargetDrawableId) {
-                        restarVida()
+                        if (isJuegoActivo) restarVida()
                     }
                 }
             }
@@ -200,7 +272,6 @@ class JuegoDificilActivity : AppCompatActivity() {
     private fun sumarPuntos(cantidad: Int) {
         puntos += cantidad
         tvPuntos.text = "PUNTOS: $puntos"
-
         if (puntos > record) {
             record = puntos
         }
@@ -209,7 +280,6 @@ class JuegoDificilActivity : AppCompatActivity() {
     private fun restarVida() {
         vidas--
         tvVidas.text = "VIDAS: $vidas"
-
         if (vidas <= 0) {
             tvVidas.text = "¡FIN!"
             terminarJuego()
@@ -218,7 +288,13 @@ class JuegoDificilActivity : AppCompatActivity() {
 
     private fun terminarJuego() {
         isJuegoActivo = false
+
+        // Limpiar todo
         gameHandler.removeCallbacksAndMessages(null)
+        for(anim in animadoresActivos) {
+            anim.cancel()
+        }
+        animadoresActivos.clear()
 
         Handler(Looper.getMainLooper()).postDelayed({
                                                         val intent = Intent(this, FinReinicioActivity::class.java)
