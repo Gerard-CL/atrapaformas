@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -46,6 +47,8 @@ class JuegoFacilActivity : AppCompatActivity() {
         R.drawable.circulos_formas
                                       )
 
+    private var mediaPlayer: MediaPlayer? = null
+
     // ===============================
     // 2. CICLO DE VIDA - onCreate
     // ===============================
@@ -53,6 +56,15 @@ class JuegoFacilActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_juego_facil)
+        // Inicializamos con TU archivo 'fondomusica1'
+        mediaPlayer = MediaPlayer.create(this, R.raw.fondomusica1)
+
+// Configuramos para que se repita infinitamente
+        mediaPlayer?.isLooping = true
+
+// Arrancamos la música
+        mediaPlayer?.start()
+
 
         val nombreRecibido = intent.getStringExtra("NOMBRE_JUGADOR")
 
@@ -82,6 +94,27 @@ class JuegoFacilActivity : AppCompatActivity() {
         cieloContainer.post {
             iniciarJuego()
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        // Pausar si el usuario minimiza la app
+        mediaPlayer?.pause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Reanudar si el usuario vuelve
+        if (mediaPlayer?.isPlaying == false) {
+            mediaPlayer?.start()
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        // Liberar memoria al cerrar la app completamente
+        mediaPlayer?.release()
+        mediaPlayer = null
     }
 
     // ===============================

@@ -4,6 +4,7 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
 import android.content.Intent
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -31,6 +32,8 @@ class JuegoMedioActivity : AppCompatActivity() {
     private val gameHandler = Handler(Looper.getMainLooper())
     private val random = Random()
 
+    private var mediaPlayer: MediaPlayer? = null
+
     private val imagenesJuego = listOf(
         R.drawable.cuadrado_formas,
         R.drawable.triangulos_formas,
@@ -42,6 +45,14 @@ class JuegoMedioActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_juego_facil)
+
+        mediaPlayer = MediaPlayer.create(this, R.raw.fondomusica1)
+
+// Configuramos para que se repita infinitamente
+        mediaPlayer?.isLooping = true
+
+// Arrancamos la música
+        mediaPlayer?.start()
 
         val nombreRecibido = intent.getStringExtra("NOMBRE_JUGADOR")
 
@@ -67,6 +78,27 @@ class JuegoMedioActivity : AppCompatActivity() {
         // Iniciar el juego
         iniciarJuego()
     }
+    override fun onPause() {
+        super.onPause()
+        // Pausar si el usuario minimiza la app
+        mediaPlayer?.pause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Reanudar si el usuario vuelve
+        if (mediaPlayer?.isPlaying == false) {
+            mediaPlayer?.start()
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        // Liberar memoria al cerrar la app completamente
+        mediaPlayer?.release()
+        mediaPlayer = null
+    }
+
 
     // --- 3. Game Loop ---
     private fun iniciarJuego() {
