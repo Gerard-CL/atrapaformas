@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageButton
-import android.widget.Toast // <-- Importante: Añadir la importación de Toast
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -15,14 +15,16 @@ import androidx.core.view.WindowInsetsCompat
 
 class LoginActivity : AppCompatActivity() {
     private var instructionsOverlay: View? = null
-    private lateinit var gestorJugadores: GestorJugadores
+    private lateinit var gestorPartidas: GestorPartidas
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_login)
 
-        gestorJugadores = GestorJugadores("${filesDir.path}/jugadores.json")
+        // INICIALIZAR EL GESTOR DE PARTIDAS
+        gestorPartidas = GestorPartidas("${filesDir.path}/partidas")
+
         val button_facil = findViewById<ImageButton>(R.id.button_facil)
         val button_medio = findViewById<ImageButton>(R.id.button_medio)
         val button_dificil = findViewById<ImageButton>(R.id.button_dificil)
@@ -38,54 +40,80 @@ class LoginActivity : AppCompatActivity() {
         // Mostrar overlay de instrucciones
         showInstructionsOverlay()
 
-        button_facil.setOnClickListener {
-            // 1. Obtener y "limpiar" el nombre
+        // FUNCIÓN PARA VALIDAR DATOS (sin crear partida todavía)
+        fun validarDatos(): Pair<String, Int>? {
             val nombre = nombreJugador.text.toString().trim()
+            val edadTexto = edadJugador.text.toString().trim()
 
-            // 2. Validar que no esté en blanco
-            if (nombre.isNotBlank()) {
-                // 3a. Si es válido: continuar
+            if (nombre.isBlank()) {
+                Toast.makeText(this, "¡Debes ingresar un nombre!", Toast.LENGTH_SHORT).show()
+                return null
+            }
+
+            if (edadTexto.isBlank()) {
+                Toast.makeText(this, "¡Debes ingresar tu edad!", Toast.LENGTH_SHORT).show()
+                return null
+            }
+
+            val edad = edadTexto.toIntOrNull()
+            if (edad == null || edad <= 0 || edad > 120) {
+                Toast.makeText(this, "¡Edad no válida! (1-120)", Toast.LENGTH_SHORT).show()
+                return null
+            }
+
+            return Pair(nombre, edad)
+        }
+
+        button_facil.setOnClickListener {
+            val datos = validarDatos()
+            if (datos != null) {
+                val (nombre, edad) = datos
+                // CREAR JUGADOR Y PARTIDA CON DIFICULTAD "Fácil"
+                val jugador = Jugador.crearJugador(nombre, edad, "Fácil")
+                val idPartida = gestorPartidas.crearPartida(jugador)
+
                 val intent = Intent(this, JuegoFacilActivity::class.java)
                 intent.putExtra("NOMBRE_JUGADOR", nombre)
+                intent.putExtra("ID_PARTIDA", idPartida)
                 startActivity(intent)
-            } else {
-                // 3b. Si es inválido: mostrar Toast y no hacer nada más
-                Toast.makeText(this, "¡Debes ingresar un nombre!", Toast.LENGTH_SHORT).show()
             }
         }
 
         button_medio.setOnClickListener {
-            // Repetimos la misma lógica de validación
-            val nombre = nombreJugador.text.toString().trim()
+            val datos = validarDatos()
+            if (datos != null) {
+                val (nombre, edad) = datos
+                // CREAR JUGADOR Y PARTIDA CON DIFICULTAD "Medio"
+                val jugador = Jugador.crearJugador(nombre, edad, "Medio")
+                val idPartida = gestorPartidas.crearPartida(jugador)
 
-            if (nombre.isNotBlank()) {
                 val intent = Intent(this, JuegoMedioActivity::class.java)
                 intent.putExtra("NOMBRE_JUGADOR", nombre)
+                intent.putExtra("ID_PARTIDA", idPartida)
                 startActivity(intent)
-            } else {
-                Toast.makeText(this, "¡Debes ingresar un nombre!", Toast.LENGTH_SHORT).show()
             }
         }
 
         button_dificil.setOnClickListener {
-            // Repetimos la misma lógica de validación
-            val nombre = nombreJugador.text.toString().trim()
+            val datos = validarDatos()
+            if (datos != null) {
+                val (nombre, edad) = datos
+                // CREAR JUGADOR Y PARTIDA CON DIFICULTAD "Difícil"
+                val jugador = Jugador.crearJugador(nombre, edad, "Difícil")
+                val idPartida = gestorPartidas.crearPartida(jugador)
 
-            if (nombre.isNotBlank()) {
                 val intent = Intent(this, JuegoDificilActivity::class.java)
                 intent.putExtra("NOMBRE_JUGADOR", nombre)
+                intent.putExtra("ID_PARTIDA", idPartida)
                 startActivity(intent)
-            } else {
-                Toast.makeText(this, "¡Debes ingresar un nombre!", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
     // ===============================
-    // 4. OVERLAY DE INSTRUCCIONES
+    // OVERLAY DE INSTRUCCIONES
     // ===============================
     private fun showInstructionsOverlay() {
-        // ... (Tu código de overlay existente, sin cambios) ...
         val rootView = findViewById<View>(android.R.id.content)
         val overlay = LayoutInflater.from(this)
             .inflate(R.layout.instructions_overlay, rootView as? ViewGroup, false)
@@ -99,7 +127,6 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun hideInstructionsOverlay() {
-        // ... (Tu código de overlay existente, sin cambios) ...
         instructionsOverlay?.let { overlay ->
             val rootView = findViewById<ViewGroup>(android.R.id.content)
             rootView.removeView(overlay)
