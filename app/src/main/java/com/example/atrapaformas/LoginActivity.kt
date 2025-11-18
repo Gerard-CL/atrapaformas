@@ -15,15 +15,19 @@ import androidx.core.view.WindowInsetsCompat
 
 class LoginActivity : AppCompatActivity() {
     private var instructionsOverlay: View? = null
+    private lateinit var gestorJugadores: GestorJugadores
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_login)
+
+        gestorJugadores = GestorJugadores("${filesDir.path}/jugadores.json")
         val button_facil = findViewById<ImageButton>(R.id.button_facil)
         val button_medio = findViewById<ImageButton>(R.id.button_medio)
         val button_dificil = findViewById<ImageButton>(R.id.button_dificil)
         val nombreJugador = findViewById<EditText>(R.id.NombreJugador)
+        val edadJugador = findViewById<EditText>(R.id.EdadJugador)
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
