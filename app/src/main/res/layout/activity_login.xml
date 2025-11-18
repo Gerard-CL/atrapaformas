@@ -9,55 +9,126 @@
     android:background="@drawable/fondo_basico"
     android:padding="24dp">
 
-
-    <!-- Campo de texto para el nombre del jugador -->
-
-
-    <!-- Texto "Elige el nivel:" -->
-
-
-    <!-- ImageButton Nivel Fácil -->
-
-
-    <!-- ImageButton Nivel Medio -->
-
-
-    <!-- ImageButton Nivel Difícil -->
-
     <TextView
-        android:id="@+id/tvIndicatuNombre"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:text="¿Cómo te llamas?"
-        android:textColor="#0B4F9C"
-        android:textSize="90sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-
+        android:id="@+id/bienvenido"
+        android:layout_width="653dp"
+        android:layout_height="97dp"
+        android:layout_marginTop="52dp"
         android:shadowColor="#FFFFFF"
         android:shadowDx="0"
         android:shadowDy="0"
-        android:shadowRadius="15" />
+        android:shadowRadius="15"
+        android:text="¡Bienvenido/a!"
+        android:textColor="#0B4F9C"
+        android:textSize="90sp"
+        android:textStyle="bold"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvIndicatuEdad"
+        android:layout_width="320dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="220dp"
+        android:shadowColor="#FFFFFF"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:shadowRadius="15"
+        android:text="Tu edad:"
+        android:textColor="#0B4F9C"
+        android:textSize="40sp"
+        android:textStyle="bold"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.827"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvIndicatuNombre"
+        android:layout_width="320dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="220dp"
+        android:shadowColor="#FFFFFF"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:shadowRadius="15"
+        android:text="Tu nombre:"
+        android:textColor="#0B4F9C"
+        android:textSize="40sp"
+        android:textStyle="bold"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.169"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/EdadJugador"
+        android:layout_width="364dp"
+        android:layout_height="52dp"
+        android:layout_marginTop="276dp"
+        android:background="@drawable/rounded_edittext"
+        android:hint="@string/edad_jugador"
+        android:inputType="textPersonName"
+        android:padding="16dp"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.852"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_max="400dp" />
+
+    <EditText
+        android:id="@+id/NombreJugador"
+        android:layout_width="364dp"
+        android:layout_height="52dp"
+        android:layout_marginTop="276dp"
+        android:background="@drawable/rounded_edittext"
+        android:hint="@string/nombre_jugador"
+        android:inputType="textPersonName"
+        android:padding="16dp"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.169"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_max="400dp" />
+
+    <TextView
+        android:id="@+id/tvEligeNivel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:shadowColor="#FFFFFF"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:shadowRadius="10"
+        android:text="@string/elige_nivel"
+        android:textColor="#0B4F9C"
+
+        android:textSize="50sp"
+
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/NombreJugador" />
 
     <ImageButton
-        android:id="@+id/button_medio"
-        android:layout_width="303dp"
+        android:id="@+id/button_facil"
+        android:layout_width="343dp"
         android:layout_height="119dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="40dp"
         android:layout_marginEnd="8dp"
         android:background="?attr/selectableItemBackground"
         android:scaleType="fitCenter"
-        android:src="@drawable/button_medio"
-        app:layout_constraintBottom_toBottomOf="@+id/button_facil"
-        app:layout_constraintEnd_toStartOf="@+id/button_dificil"
-        app:layout_constraintStart_toEndOf="@+id/button_facil"
-        app:layout_constraintTop_toTopOf="@+id/button_facil"
-        app:layout_constraintVertical_bias="1.0" />
+        android:src="@drawable/button_facil"
+        app:layout_constraintEnd_toStartOf="@+id/button_medio"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvEligeNivel" />
 
     <ImageButton
         android:id="@+id/button_dificil"
@@ -75,53 +146,20 @@
         app:layout_constraintVertical_bias="1.0" />
 
     <ImageButton
-        android:id="@+id/button_facil"
-        android:layout_width="343dp"
+        android:id="@+id/button_medio"
+        android:layout_width="303dp"
         android:layout_height="119dp"
-        android:layout_marginTop="84dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:background="?attr/selectableItemBackground"
         android:scaleType="fitCenter"
-        android:src="@drawable/button_facil"
-        app:layout_constraintEnd_toStartOf="@+id/button_medio"
-        app:layout_constraintHorizontal_chainStyle="spread"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvEligeNivel" />
-
-    <TextView
-        android:id="@+id/tvEligeNivel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="128dp"
-        android:text="@string/elige_nivel"
-        android:textSize="50sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.501"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/NombreJugador"
-
-        android:textColor="#0B4F9C"
-
-        android:shadowColor="#FFFFFF"
-        android:shadowDx="0"
-        android:shadowDy="0"
-        android:shadowRadius="10" />
-
-    <EditText
-        android:id="@+id/NombreJugador"
-        android:layout_width="505dp"
-        android:layout_height="77dp"
-        android:layout_marginTop="164dp"
-        android:background="@drawable/rounded_edittext"
-        android:hint="@string/nombre_jugador"
-        android:inputType="textPersonName"
-        android:padding="16dp"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth_max="400dp" />
+        android:src="@drawable/button_medio"
+        app:layout_constraintBottom_toBottomOf="@+id/button_facil"
+        app:layout_constraintEnd_toStartOf="@+id/button_dificil"
+        app:layout_constraintStart_toEndOf="@+id/button_facil"
+        app:layout_constraintTop_toTopOf="@+id/button_facil"
+        app:layout_constraintVertical_bias="0.0" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

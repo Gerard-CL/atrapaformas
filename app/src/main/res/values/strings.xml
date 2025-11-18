@@ -8,4 +8,5 @@
     <string name="nivel_medio">Nivel medio</string>
     <string name="nivel_dificil">Nivel difícil</string>
     <string name="continuar">Continuar</string>
+    <string name="edad_jugador">Edad jugador</string>
 </resources>
