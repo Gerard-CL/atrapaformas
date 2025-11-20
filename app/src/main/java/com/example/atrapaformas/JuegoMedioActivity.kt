@@ -147,6 +147,32 @@ class JuegoMedioActivity : AppCompatActivity() {
     }
 
 
+    class JuegoMedioActivity : AppCompatActivity() {
+        private lateinit var gestorPartidas: GestorPartidas
+        private var idPartida: String = ""
+
+        override fun onCreate(savedInstanceState: Bundle?) {
+            super.onCreate(savedInstanceState)
+            setContentView(R.layout.activity_juego_facil)
+
+            gestorPartidas = GestorPartidas("${filesDir.path}/partidas")
+            idPartida = intent.getStringExtra("ID_PARTIDA") ?: ""
+
+            // SABEMOS que es dificultad "Fácil" porque estamos en JuegoFacilActivity
+            // ... tu código del juego fácil
+        }
+
+        fun cuandoTermineElJuego(puntuacion: Int, tiempoJugado: Int) {
+            gestorPartidas.finalizarPartida(idPartida, puntuacion, tiempoJugado)
+
+            val intent = Intent(this, FinReinicioActivity::class.java)
+            intent.putExtra("PUNTUACION", puntuacion)
+            intent.putExtra("ID_PARTIDA", idPartida)
+            intent.putExtra("DIFICULTAD", "Medio") // ← Dificultad Media
+            startActivity(intent)
+        }
+    }
+
     override fun onPause() {
         super.onPause()
         // Si el usuario sale de la app, pausamos automáticamente
