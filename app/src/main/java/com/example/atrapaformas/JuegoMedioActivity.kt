@@ -23,28 +23,28 @@ class JuegoMedioActivity : AppCompatActivity() {
     private var puntos = 0
     private var record = 0
     private var isJuegoActivo = true
-    private var isPausado = false // --- NUEVO: Controla si está en pausa
+    private var isPausado = false
 
     private lateinit var tvVidas: TextView
     private lateinit var tvPuntos: TextView
     private lateinit var ivTargetShape: ImageView
     private lateinit var cieloContainer: ConstraintLayout
-
-    // --- NUEVO: Referencia al botón de pausa (asegúrate de tenerlo en el XML)
     private lateinit var btnPause: View
 
     private var currentTargetDrawableId: Int = 0
 
     private val gameHandler = Handler(Looper.getMainLooper())
     private val random = Random()
-
     private var mediaPlayer: MediaPlayer? = null
 
-    // --- NUEVO: Lista para guardar las animaciones activas y poder pausarlas ---
+    // Lista para guardar las animaciones activas
     private val animadoresActivos = mutableListOf<ObjectAnimator>()
-
-    // --- NUEVO: Sacamos el Runnable a una variable de clase para poder reutilizarlo
     private lateinit var gameLoop: Runnable
+
+    // --- Variables de Gestión de Partida (Fusionadas) ---
+    private lateinit var gestorPartidas: GestorPartidas
+    private var idPartida: String = ""
+    private var tiempoInicioPartida: Long = 0
 
     private val imagenesJuego = listOf(
         R.drawable.cuadrado_formas,
@@ -55,13 +55,15 @@ class JuegoMedioActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_juego_facil)
+        setContentView(R.layout.activity_juego_facil) // Asegúrate que este sea el layout correcto
 
-        mediaPlayer = MediaPlayer.create(this, R.raw.fondomusica1)
-        mediaPlayer?.isLooping = true
-        mediaPlayer?.start()
-
+        // 1. Inicializar Gestor y Datos de Partida
+        gestorPartidas = GestorPartidas("${filesDir.path}/partidas")
+        idPartida = intent.getStringExtra("ID_PARTIDA") ?: ""
         val nombreRecibido = intent.getStringExtra("NOMBRE_JUGADOR")
+        tiempoInicioPartida = System.currentTimeMillis() // Para calcular tiempo jugado luego
+
+        // 2. Configurar UI
         val textViewNombre = findViewById<TextView>(R.id.tv_usuario)
         textViewNombre.text = nombreRecibido ?: "Jugador"
 
@@ -69,34 +71,38 @@ class JuegoMedioActivity : AppCompatActivity() {
         tvPuntos = findViewById(R.id.tv_puntos)
         ivTargetShape = findViewById(R.id.iv_target_shape)
         cieloContainer = findViewById(R.id.cielo_container)
-
-        // --- NUEVO: Inicializar botón de pausa ---
-        // Asegúrate de que en tu XML tengas un botón/imagen con id: button_pause
         btnPause = findViewById(R.id.button_pause)
+
+        // 3. Configurar Música
+        mediaPlayer = MediaPlayer.create(this, R.raw.fondomusica1)
+        mediaPlayer?.isLooping = true
+        mediaPlayer?.start()
+
+        // 4. Listeners e Inicialización
         btnPause.setOnClickListener {
             mostrarDialogoPausa()
         }
 
         tvVidas.text = "VIDAS: $vidas"
         tvPuntos.text = "PUNTOS: $puntos"
+
+        // Aquí podrías cargar el récord real si lo tienes guardado
         record = 112
 
-        // Definimos el bucle del juego aquí para poder iniciarlo y pararlo
         definirGameLoop()
-
         iniciarJuego()
     }
 
-    // --- NUEVO: Lógica del botón de Pausa ---
+    // --- Lógica de Pausa ---
     private fun mostrarDialogoPausa() {
-        if (!isJuegoActivo) return // Si ya perdiste, no permite pausar
+        if (!isJuegoActivo) return
 
         pausarLogicaJuego()
 
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Pausa")
         builder.setMessage("¿Qué quieres hacer?")
-        builder.setCancelable(false) // Evita que se cierre tocando fuera
+        builder.setCancelable(false)
 
         builder.setPositiveButton("Reanudar") { dialog, _ ->
             reanudarLogicaJuego()
@@ -104,7 +110,6 @@ class JuegoMedioActivity : AppCompatActivity() {
         }
 
         builder.setNegativeButton("Salir") { dialog, _ ->
-            // Cierra la actividad y vuelve atrás (o al menú)
             finish()
         }
 
@@ -114,17 +119,15 @@ class JuegoMedioActivity : AppCompatActivity() {
 
     private fun pausarLogicaJuego() {
         isPausado = true
-        // 1. Parar la música
         if (mediaPlayer?.isPlaying == true) {
             mediaPlayer?.pause()
         }
-        // 2. Detener la generación de nuevos objetos
         gameHandler.removeCallbacks(gameLoop)
-        gameHandler.removeCallbacksAndMessages(null) // Limpia todo
+        gameHandler.removeCallbacksAndMessages(null)
 
-        // 3. Pausar las animaciones de caída actuales
+        // Pausar animaciones activas
         for (anim in animadoresActivos) {
-            if (anim.isRunning) { // Solo en API 19+, si usas una muy vieja usa if(anim.isStarted)
+            if (anim.isRunning) {
                 anim.pause()
             }
         }
@@ -132,61 +135,27 @@ class JuegoMedioActivity : AppCompatActivity() {
 
     private fun reanudarLogicaJuego() {
         isPausado = false
-        // 1. Reanudar música
         mediaPlayer?.start()
 
-        // 2. Reanudar animaciones
+        // Reanudar animaciones
         for (anim in animadoresActivos) {
             if (anim.isPaused) {
                 anim.resume()
             }
         }
-
-        // 3. Volver a arrancar el bucle de generación
+        // Reiniciar el loop
         gameHandler.post(gameLoop)
-    }
-
-
-    class JuegoMedioActivity : AppCompatActivity() {
-        private lateinit var gestorPartidas: GestorPartidas
-        private var idPartida: String = ""
-
-        override fun onCreate(savedInstanceState: Bundle?) {
-            super.onCreate(savedInstanceState)
-            setContentView(R.layout.activity_juego_facil)
-
-            gestorPartidas = GestorPartidas("${filesDir.path}/partidas")
-            idPartida = intent.getStringExtra("ID_PARTIDA") ?: ""
-
-            // SABEMOS que es dificultad "Fácil" porque estamos en JuegoFacilActivity
-            // ... tu código del juego fácil
-        }
-
-        fun cuandoTermineElJuego(puntuacion: Int, tiempoJugado: Int) {
-            gestorPartidas.finalizarPartida(idPartida, puntuacion, tiempoJugado)
-
-            val intent = Intent(this, FinReinicioActivity::class.java)
-            intent.putExtra("PUNTUACION", puntuacion)
-            intent.putExtra("ID_PARTIDA", idPartida)
-            intent.putExtra("DIFICULTAD", "Medio") // ← Dificultad Media
-            startActivity(intent)
-        }
     }
 
     override fun onPause() {
         super.onPause()
-        // Si el usuario sale de la app, pausamos automáticamente
         if (isJuegoActivo && !isPausado) {
             pausarLogicaJuego()
-            // Nota: Aquí no mostramos el diálogo, porque el usuario ya salió de la app.
-            // Podrías mostrar el diálogo en onResume si quieres forzar la pausa al volver.
         }
     }
 
     override fun onResume() {
         super.onResume()
-        // Si volvemos y estaba pausado por el sistema (no por el botón), reanudamos o mostramos diálogo
-        // Para simplificar, si minimizó la app, al volver mostramos el diálogo de pausa
         if (isJuegoActivo && isPausado) {
             mostrarDialogoPausa()
         }
@@ -196,6 +165,7 @@ class JuegoMedioActivity : AppCompatActivity() {
         super.onDestroy()
         mediaPlayer?.release()
         mediaPlayer = null
+        gameHandler.removeCallbacksAndMessages(null) // Limpieza final extra
     }
 
     // --- Lógica del Juego ---
@@ -216,7 +186,7 @@ class JuegoMedioActivity : AppCompatActivity() {
                                             }, retrasoSpawn)
                 }
 
-                val proximoDelay = (2500).toLong()
+                val proximoDelay = 2500L
                 gameHandler.postDelayed(this, proximoDelay)
             }
         }
@@ -243,7 +213,6 @@ class JuegoMedioActivity : AppCompatActivity() {
         objeto.layoutParams = ConstraintLayout.LayoutParams(tamanoEnPx, tamanoEnPx)
 
         cieloContainer.post {
-            // Verificación extra por seguridad
             if (cieloContainer.width <= 0) return@post
 
             val maxWidth = (cieloContainer.width - tamanoEnPx).coerceAtLeast(1)
@@ -252,12 +221,12 @@ class JuegoMedioActivity : AppCompatActivity() {
             objeto.y = 0f
 
             objeto.setOnClickListener { view ->
-                if (!isJuegoActivo || isPausado) return@setOnClickListener // Bloqueo click en pausa
+                if (!isJuegoActivo || isPausado) return@setOnClickListener
 
                 cieloContainer.removeView(view)
-                // Al hacer click y eliminarlo, cancelamos su animación para que no reste vida al final
-                // Esto requiere buscar la animación asociada, pero para simplificar,
-                // la lógica actual de onAnimationEnd maneja si la vista tiene padre.
+
+                // Importante: Buscamos la animación asociada y la cancelamos limpiamente
+                // (Aunque en este caso simple, si la vista se va, onAnimationEnd maneja la lógica)
 
                 if (view.tag as Int == currentTargetDrawableId) {
                     sumarPuntos(10)
@@ -276,19 +245,18 @@ class JuegoMedioActivity : AppCompatActivity() {
         val animator = ObjectAnimator.ofFloat(objeto, "translationY", 0f, alturaSuelo)
         animator.duration = 4000
 
-        // --- NUEVO: Agregar a la lista de activos ---
         animadoresActivos.add(animator)
 
         animator.addListener(object : AnimatorListenerAdapter() {
             override fun onAnimationEnd(animation: Animator) {
-                // --- NUEVO: Remover de la lista de activos ---
+                // Removemos de la lista.
+                // NOTA: Esto es lo que chocaba con el bucle 'for' en terminarJuego
                 animadoresActivos.remove(animation)
 
                 if (cieloContainer.indexOfChild(objeto) != -1) {
                     cieloContainer.removeView(objeto)
                     if (objeto.tag as Int == currentTargetDrawableId) {
-                        // Solo resta vida si el juego sigue activo y no se ha clicado
-                        if(isJuegoActivo) restarVida()
+                        if (isJuegoActivo) restarVida()
                     }
                 }
             }
@@ -313,21 +281,39 @@ class JuegoMedioActivity : AppCompatActivity() {
         }
     }
 
+    // --- CORRECCIÓN CRÍTICA AQUÍ ---
     private fun terminarJuego() {
         isJuegoActivo = false
-        // Cancelamos todo
+
+        // Detenemos el handler del juego
         gameHandler.removeCallbacksAndMessages(null)
-        for(anim in animadoresActivos) {
+
+        // CORRECCIÓN DEL CRASH:
+        // Usamos .toList() para iterar sobre una COPIA de la lista.
+        // Así, cuando 'anim.cancel()' llama a 'onAnimationEnd' y este remueve
+        // el item de la lista original, el bucle no se rompe.(BUSCADO CON GEMINI POR DESESPERACION LOL)
+
+        val copiaAnimadores = animadoresActivos.toList()
+
+        for (anim in copiaAnimadores) {
             anim.cancel()
         }
+        // Ahora sí limpiamos la lista original
         animadoresActivos.clear()
+
+        // Calcular tiempo jugado (simulado o real)
+        val tiempoJugadoSegundos = ((System.currentTimeMillis() - tiempoInicioPartida) / 1000).toInt()
+
+        // Guardar partida usando el GestorPartidas
+        gestorPartidas.finalizarPartida(idPartida, puntos, tiempoJugadoSegundos)
 
         Handler(Looper.getMainLooper()).postDelayed({
                                                         val intent = Intent(this, FinReinicioActivity::class.java)
                                                         intent.putExtra("PUNTUACION_FINAL", puntos)
-                                                        intent.putExtra("RECORD_ACTUAL", record)
+                                                        intent.putExtra("ID_PARTIDA", idPartida)
+                                                        intent.putExtra("DIFICULTAD", "Medio")
                                                         startActivity(intent)
                                                         finish()
-                                                    }, 500) // Pequeño delay para que se vea el fin
+                                                    }, 500)
     }
 }

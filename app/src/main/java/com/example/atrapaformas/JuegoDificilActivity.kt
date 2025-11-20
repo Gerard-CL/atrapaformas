@@ -11,7 +11,7 @@ import android.os.Looper
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.app.AlertDialog // Necesario para la ventana emergente
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import java.util.Random
@@ -23,30 +23,28 @@ class JuegoDificilActivity : AppCompatActivity() {
     private var puntos = 0
     private var record = 0
     private var isJuegoActivo = true
-
-    // --- NUEVO: Variable de estado de pausa
     private var isPausado = false
 
     private lateinit var tvVidas: TextView
     private lateinit var tvPuntos: TextView
     private lateinit var ivTargetShape: ImageView
     private lateinit var cieloContainer: ConstraintLayout
-
-    // --- NUEVO: Botón de pausa
     private lateinit var btnPause: View
 
     private var currentTargetDrawableId: Int = 0
 
     private val gameHandler = Handler(Looper.getMainLooper())
     private val random = Random()
-
     private var mediaPlayer: MediaPlayer? = null
 
-    // --- NUEVO: Lista para controlar animaciones activas
+    // Lista para controlar animaciones activas
     private val animadoresActivos = mutableListOf<ObjectAnimator>()
-
-    // --- NUEVO: Runnable global
     private lateinit var gameLoop: Runnable
+
+    // --- VARIABLES DE GESTIÓN DE PARTIDA (Fusionadas) ---
+    private lateinit var gestorPartidas: GestorPartidas
+    private var idPartida: String = ""
+    private var tiempoInicioPartida: Long = 0
 
     private val imagenesJuego = listOf(
         R.drawable.cuadrado_formas,
@@ -58,9 +56,15 @@ class JuegoDificilActivity : AppCompatActivity() {
     // --- 2. Método Principal ---
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // OJO: Estás usando el layout de 'juego_facil', asegúrate que tiene el botón de pausa
+        // Se usa el layout de juego fácil (común)
         setContentView(R.layout.activity_juego_facil)
 
+        // 1. Inicializar Gestor
+        gestorPartidas = GestorPartidas("${filesDir.path}/partidas")
+        idPartida = intent.getStringExtra("ID_PARTIDA") ?: ""
+        tiempoInicioPartida = System.currentTimeMillis()
+
+        // 2. Música
         mediaPlayer = MediaPlayer.create(this, R.raw.fondomusica1)
         mediaPlayer?.isLooping = true
         mediaPlayer?.start()
@@ -74,16 +78,15 @@ class JuegoDificilActivity : AppCompatActivity() {
         tvPuntos = findViewById(R.id.tv_puntos)
         ivTargetShape = findViewById(R.id.iv_target_shape)
         cieloContainer = findViewById(R.id.cielo_container)
-
-        // --- NUEVO: Configurar botón de pausa
         btnPause = findViewById(R.id.button_pause)
+
+        // Configurar botón de pausa
         btnPause.setOnClickListener {
             mostrarDialogoPausa()
         }
 
         tvVidas.text = "VIDAS: $vidas"
         tvPuntos.text = "PUNTOS: $puntos"
-
         record = 112
 
         // Definimos el loop y arrancamos
@@ -91,7 +94,7 @@ class JuegoDificilActivity : AppCompatActivity() {
         iniciarJuego()
     }
 
-    // --- NUEVO: Lógica del Menú de Pausa ---
+    // --- Lógica del Menú de Pausa ---
     private fun mostrarDialogoPausa() {
         if (!isJuegoActivo) return
 
@@ -120,11 +123,9 @@ class JuegoDificilActivity : AppCompatActivity() {
         if (mediaPlayer?.isPlaying == true) {
             mediaPlayer?.pause()
         }
-        // Detener generación
         gameHandler.removeCallbacks(gameLoop)
         gameHandler.removeCallbacksAndMessages(null)
 
-        // Congelar figuras cayendo
         for (anim in animadoresActivos) {
             if (anim.isRunning) {
                 anim.pause()
@@ -136,41 +137,13 @@ class JuegoDificilActivity : AppCompatActivity() {
         isPausado = false
         mediaPlayer?.start()
 
-        // Reanudar figuras
         for (anim in animadoresActivos) {
             if (anim.isPaused) {
                 anim.resume()
             }
         }
-        // Reanudar generación
         gameHandler.post(gameLoop)
     }
-    class JuegoDificilActivity : AppCompatActivity() {
-        private lateinit var gestorPartidas: GestorPartidas
-        private var idPartida: String = ""
-
-        override fun onCreate(savedInstanceState: Bundle?) {
-            super.onCreate(savedInstanceState)
-            setContentView(R.layout.activity_juego_facil)
-
-            gestorPartidas = GestorPartidas("${filesDir.path}/partidas")
-            idPartida = intent.getStringExtra("ID_PARTIDA") ?: ""
-
-            // SABEMOS que es dificultad "Fácil" porque estamos en JuegoFacilActivity
-            // ... tu código del juego fácil
-        }
-
-        fun cuandoTermineElJuego(puntuacion: Int, tiempoJugado: Int) {
-            gestorPartidas.finalizarPartida(idPartida, puntuacion, tiempoJugado)
-
-            val intent = Intent(this, FinReinicioActivity::class.java)
-            intent.putExtra("PUNTUACION", puntuacion)
-            intent.putExtra("ID_PARTIDA", idPartida)
-            intent.putExtra("DIFICULTAD", "Difícil") // ← Dificultad Difícil
-            startActivity(intent)
-        }
-    }
-
 
     override fun onPause() {
         super.onPause()
@@ -190,12 +163,11 @@ class JuegoDificilActivity : AppCompatActivity() {
         super.onDestroy()
         mediaPlayer?.release()
         mediaPlayer = null
-        animadoresActivos.clear()
+        gameHandler.removeCallbacksAndMessages(null)
     }
 
     // --- 3. Game Loop ---
 
-    // --- NUEVO: Definimos el Runnable fuera
     private fun definirGameLoop() {
         gameLoop = object : Runnable {
             override fun run() {
@@ -249,7 +221,6 @@ class JuegoDificilActivity : AppCompatActivity() {
             objeto.y = 0f
 
             objeto.setOnClickListener { view ->
-                // --- NUEVO: Bloquear clic si está pausado
                 if (!isJuegoActivo || isPausado) return@setOnClickListener
 
                 cieloContainer.removeView(view)
@@ -274,12 +245,11 @@ class JuegoDificilActivity : AppCompatActivity() {
         // VELOCIDAD DIFICIL: 2.5 segundos en caer
         animator.duration = 2500
 
-        // --- NUEVO: Añadir a lista
         animadoresActivos.add(animator)
 
         animator.addListener(object : AnimatorListenerAdapter() {
-            override fun onAnimationEnd(animation: Animator) { // Corrección del tipo Animator
-                // --- NUEVO: Remover de lista
+            override fun onAnimationEnd(animation: Animator) {
+                // Remover de lista
                 animadoresActivos.remove(animation)
 
                 if (cieloContainer.indexOfChild(objeto) != -1) {
@@ -312,22 +282,31 @@ class JuegoDificilActivity : AppCompatActivity() {
         }
     }
 
+    // --- 7. FIN DEL JUEGO (CORREGIDO) ---
     private fun terminarJuego() {
         isJuegoActivo = false
 
         // Limpiar todo
         gameHandler.removeCallbacksAndMessages(null)
-        for(anim in animadoresActivos) {
+
+        // --- CORRECCIÓN CRASH: Usar copia de la lista ---
+        val copiaAnimadores = animadoresActivos.toList()
+        for(anim in copiaAnimadores) {
             anim.cancel()
         }
         animadoresActivos.clear()
 
+        // --- LÓGICA FUSIONADA DEL GESTOR DE PARTIDAS ---
+        val tiempoJugadoSegundos = ((System.currentTimeMillis() - tiempoInicioPartida) / 1000).toInt()
+        gestorPartidas.finalizarPartida(idPartida, puntos, tiempoJugadoSegundos)
+
         Handler(Looper.getMainLooper()).postDelayed({
                                                         val intent = Intent(this, FinReinicioActivity::class.java)
                                                         intent.putExtra("PUNTUACION_FINAL", puntos)
-                                                        intent.putExtra("RECORD_ACTUAL", record)
+                                                        intent.putExtra("ID_PARTIDA", idPartida)
+                                                        intent.putExtra("DIFICULTAD", "Difícil")
                                                         startActivity(intent)
                                                         finish()
-                                                    }, 0)
+                                                    }, 500)
     }
 }
