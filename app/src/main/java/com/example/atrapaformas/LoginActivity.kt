@@ -17,6 +17,8 @@ import androidx.core.view.WindowInsetsCompat
 class LoginActivity : AppCompatActivity() {
     private var instructionsOverlay: View? = null
     private lateinit var gestorPartidas: GestorPartidas
+    private var mediaPlayer: MediaPlayer? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,7 +33,6 @@ class LoginActivity : AppCompatActivity() {
 // Arrancamos la música
         mediaPlayer?.start()
 
-        gestorJugadores = GestorJugadores("${filesDir.path}/jugadores.json")
         // INICIALIZAR EL GESTOR DE PARTIDAS
         gestorPartidas = GestorPartidas("${filesDir.path}/partidas")
 
