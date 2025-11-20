@@ -108,8 +108,8 @@ class JuegoFacilActivity : AppCompatActivity() {
         pausarLogicaJuego()
 
         val builder = AlertDialog.Builder(this)
-        builder.setTitle("Juego Pausado")
-        builder.setMessage("¿Qué deseas hacer?")
+        builder.setTitle("Pausa")
+        builder.setMessage("¿Qué quieres hacer?")
         builder.setCancelable(false)
 
         builder.setPositiveButton("Reanudar") { dialog, _ ->
