@@ -4,10 +4,10 @@
     <selectionStates>
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2025-11-10T16:59:00.062695800Z">
+        <DropdownSelection timestamp="2025-11-20T15:28:43.957379200Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="PhysicalDevice" identifier="serial=R52MC11B35B" />
+              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\CEP-TARDA\.android\avd\Galaxy_Tab_A10_2.avd" />
             </handle>
           </Target>
         </DropdownSelection>
