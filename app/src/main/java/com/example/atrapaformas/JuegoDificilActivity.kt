@@ -205,7 +205,26 @@ class JuegoDificilActivity : AppCompatActivity() {
     // --- 4. Crear objeto que cae ---
     private fun crearObjetoQueCae() {
         val objeto = ImageView(this)
-        val imagenParaCaerId = imagenesJuego[random.nextInt(imagenesJuego.size)]
+
+        // --- INICIO DE LA MODIFICACIÓN ---
+
+        // 1. Definimos el porcentaje de probabilidad (Ej: 60%)
+        // Puedes subir este número si quieres que salga aún más veces.
+        val probabilidadDeTarget = 40
+
+        // 2. Tiramos un "dado" de 0 a 99
+        val dado = random.nextInt(100)
+
+        val imagenParaCaerId = if (dado < probabilidadDeTarget) {
+            // CASO A: Forzamos que salga la forma correcta
+            currentTargetDrawableId
+        } else {
+            // CASO B: Sale una forma totalmente aleatoria (ruido)
+            imagenesJuego[random.nextInt(imagenesJuego.size)]
+        }
+
+        // --- FIN DE LA MODIFICACIÓN ---
+
         objeto.setImageResource(imagenParaCaerId)
         objeto.tag = imagenParaCaerId
 
@@ -307,6 +326,6 @@ class JuegoDificilActivity : AppCompatActivity() {
                                                         intent.putExtra("DIFICULTAD", "Difícil")
                                                         startActivity(intent)
                                                         finish()
-                                                    }, 500)
+                                                    }, 0)
     }
 }
