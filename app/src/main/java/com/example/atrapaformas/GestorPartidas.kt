@@ -11,9 +11,6 @@ import java.util.*
 data class Partida(
     val id: String = "",
     val jugador: Jugador,
-    val fechaPartida: String = "",
-    val horaInicio: String = "",
-    val horaFin: String = "",
     val estado: String = "en_curso" // "en_curso", "completada", "abandonada"
                   )
 
@@ -36,10 +33,7 @@ class GestorPartidas(private val directorio: String = "partidas") {
         val partida = Partida(
             id = id,
             jugador = jugador,
-            fechaPartida = formatoFecha.format(ahora),
-            horaInicio = formatoHora.format(ahora)
-                             )
-
+            )
         guardarPartida(partida)
         return id
     }
