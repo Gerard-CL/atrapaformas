@@ -17,7 +17,6 @@ class FinReinicioActivity : AppCompatActivity() {
         val botonRanking: ImageButton = findViewById(R.id.btn_ver_ranking)
         val botonJugar: ImageButton = findViewById(R.id.btn_play_again)
         val puntosRecibidos = intent.getIntExtra("PUNTUACION_FINAL", 0)
-        val recordRecibido = intent.getIntExtra("RECORD_ACTUAL", 0)
 
         val textViewPuntuacion: TextView =findViewById(R.id.puntuacion)
 
