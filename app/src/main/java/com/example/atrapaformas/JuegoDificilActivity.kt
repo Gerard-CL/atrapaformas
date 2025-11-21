@@ -228,7 +228,7 @@ class JuegoDificilActivity : AppCompatActivity() {
         objeto.setImageResource(imagenParaCaerId)
         objeto.tag = imagenParaCaerId
 
-        val tamanoEnPx = (100 * resources.displayMetrics.density).toInt()
+        val tamanoEnPx = (150 * resources.displayMetrics.density).toInt()
         objeto.layoutParams = ConstraintLayout.LayoutParams(tamanoEnPx, tamanoEnPx)
 
         cieloContainer.post {
