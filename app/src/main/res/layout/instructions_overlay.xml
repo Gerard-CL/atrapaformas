@@ -45,7 +45,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="8dp"
-                android:text="Toca las formas para salvarlas antes de que toquen el suelo"
+                android:gravity="center"
+                android:text="Aparecera una figura en la parte superior izquierda Toca las formas para salvarlas antes de que toquen el suelo"
                 android:textColor="#FFFFFF"
                 android:textSize="50sp" />
 
