@@ -4,96 +4,64 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.io.File
-import java.text.SimpleDateFormat
-import java.util.*
 
 @Serializable
 data class Partida(
-    val id: String = "",
+    val id: String,
     val jugador: Jugador,
-    val estado: String = "en_curso" // "en_curso", "completada", "abandonada"
+    val estado: String = "en_curso", // "en_curso", "completada", "abandonada"
+    val horaFin: String = "" // Añadido para guardar cuándo acabó la partida globalmente
                   )
 
 class GestorPartidas(private val directorio: String = "partidas") {
 
-    init {
-        // Crear directorio si no existe
-        val dir = File(directorio)
-        if (!dir.exists()) {
-            dir.mkdirs()
-        }
-    }
+    // El bloque init se puede simplificar con mkdirs() que es seguro llamar aunque exista
+    init { File(directorio).mkdirs() }
 
     fun crearPartida(jugador: Jugador): String {
         val id = "partida_${System.currentTimeMillis()}"
-        val ahora = Calendar.getInstance().time
-        val formatoFecha = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        val formatoHora = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
-
-        val partida = Partida(
-            id = id,
-            jugador = jugador,
-            )
+        val partida = Partida(id = id, jugador = jugador)
         guardarPartida(partida)
         return id
     }
 
     fun guardarPartida(partida: Partida) {
         try {
-            val archivo = File("${directorio}/${partida.id}.json")
-            val jsonString = Json.encodeToString(partida)
-            archivo.writeText(jsonString)
-            println("✅ Partida guardada: ${partida.id}.json")
+            File("$directorio/${partida.id}.json").writeText(Json.encodeToString(partida))
+            println("✅ Partida guardada: ${partida.id}")
         } catch (e: Exception) {
-            println("❌ Error al guardar partida: ${e.message}")
+            println("❌ Error al guardar: ${e.message}")
         }
     }
 
     fun finalizarPartida(idPartida: String, puntuacion: Int, tiempoJuego: Int) {
+        val archivo = File("$directorio/$idPartida.json")
+        if (!archivo.exists()) return
+
         try {
-            val archivo = File("${directorio}/${idPartida}.json")
-            if (archivo.exists()) {
-                val jsonString = archivo.readText()
-                val partida = Json.decodeFromString<Partida>(jsonString)
+            // 1. Leemos la partida original
+            val partida = Json.decodeFromString<Partida>(archivo.readText())
+            val horaActual = TimeUtils.getHora()
 
-                // Actualizar datos usando copy() para crear nueva instancia
-                val jugadorActualizado = partida.jugador.copy(
-                    puntuacion = puntuacion,
-                    tiempoJuego = tiempoJuego
-                                                             )
+            // 2. Actualizamos jugador y partida usando copy (más limpio e inmutable)
+            val jugadorFinal = partida.jugador.copy(
+                puntuacion = puntuacion,
+                tiempoJuego = tiempoJuego,
+                horaFin = horaActual
+                                                   )
 
-                val partidaActualizada = partida.copy(
-                    jugador = jugadorActualizado,
-                    estado = "completada",
-                    horaFin = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
-                        .format(Calendar.getInstance().time)
-                                                     )
+            val partidaFinal = partida.copy(
+                jugador = jugadorFinal,
+                estado = "completada",
+                horaFin = horaActual
+                                           )
 
-                // Guardar la partida actualizada
-                guardarPartida(partidaActualizada)
-                println("✅ Partida finalizada: $idPartida")
-            }
+            // 3. Guardamos
+            guardarPartida(partidaFinal)
+            println("✅ Partida finalizada correctamente.")
+
         } catch (e: Exception) {
-            println("❌ Error al finalizar partida: ${e.message}")
+            println("❌ Error al finalizar: ${e.message}")
         }
-    }
-
-    fun obtenerTodasLasPartidas(): List<Partida> {
-        val partidas = mutableListOf<Partida>()
-        try {
-            val directorio = File(directorio)
-            if (directorio.exists()) {
-                directorio.listFiles()?.forEach { archivo ->
-                    if (archivo.name.endsWith(".json")) {
-                        val jsonString = archivo.readText()
-                        val partida = Json.decodeFromString<Partida>(jsonString)
-                        partidas.add(partida)
-                    }
-                }
-            }
-        } catch (e: Exception) {
-            println("❌ Error al cargar partidas: ${e.message}")
-        }
-        return partidas
     }
 }
