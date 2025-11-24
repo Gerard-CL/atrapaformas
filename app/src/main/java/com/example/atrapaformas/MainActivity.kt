@@ -18,6 +18,9 @@ class MainActivity : AppCompatActivity() {
 
         // Listener para ir a LoginActivity
         btnJugar.setOnClickListener {
+
+            btnJugar.setImageResource(R.drawable.btn_pulsado)
+
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
         }
