@@ -34,7 +34,7 @@
 
             <ImageView
                 android:layout_width="203dp"
-                android:layout_height="250dp"
+                android:layout_height="214dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="16dp"
                 android:contentDescription="Icono de instrucciones"
@@ -46,18 +46,20 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="8dp"
                 android:gravity="center"
-                android:text="Aparecera una figura en la parte superior izquierda Toca las formas para salvarlas antes de que toquen el suelo"
+                android:text="Aparecera una figura en la parte superior izquierda. Toca las formas similares para salvarlas antes de que toquen el suelo."
                 android:textColor="#FFFFFF"
                 android:textSize="50sp" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="1236dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="8dp"
+                android:gravity="center"
+
                 android:text="Toca para continuar"
                 android:textColor="#FFFFFFCC"
-                android:textSize="24sp"
+                android:textSize="44sp"
                 android:textStyle="italic" />
 
         </LinearLayout>
