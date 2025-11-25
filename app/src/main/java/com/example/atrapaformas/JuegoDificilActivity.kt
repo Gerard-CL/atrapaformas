@@ -24,8 +24,8 @@ class JuegoDificilActivity : AppCompatActivity() {
     private var record = 0
     private var isJuegoActivo = true
     private var isPausado = false
+    private lateinit var hearts: List<ImageView> // Nuevo
 
-    private lateinit var tvVidas: TextView
     private lateinit var tvPuntos: TextView
     private lateinit var ivTargetShape: ImageView
     private lateinit var cieloContainer: ConstraintLayout
@@ -56,8 +56,8 @@ class JuegoDificilActivity : AppCompatActivity() {
     // --- 2. Método Principal ---
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Se usa el layout de juego fácil (común)
-        setContentView(R.layout.activity_juego_facil)
+        // Se usa el layout de juego fácil (común) que ya tiene los corazones
+        setContentView(R.layout.activity_juego_dificil)
 
         // 1. Inicializar Gestor
         gestorPartidas = GestorPartidas("${filesDir.path}/partidas")
@@ -74,7 +74,15 @@ class JuegoDificilActivity : AppCompatActivity() {
         textViewNombre.text = nombreRecibido ?: "Jugador"
 
         // Conectar vistas
-        tvVidas = findViewById(R.id.tv_vidas)
+        // tvVidas = findViewById(R.id.tv_vidas) // Eliminado
+
+        // MODIFICADO: Inicializar la lista de corazones
+        hearts = listOf(
+            findViewById(R.id.heart1),
+            findViewById(R.id.heart2),
+            findViewById(R.id.heart3)
+                       )
+
         tvPuntos = findViewById(R.id.tv_puntos)
         ivTargetShape = findViewById(R.id.iv_target_shape)
         cieloContainer = findViewById(R.id.cielo_container)
@@ -85,7 +93,7 @@ class JuegoDificilActivity : AppCompatActivity() {
             mostrarDialogoPausa()
         }
 
-        tvVidas.text = "VIDAS: $vidas"
+        // tvVidas.text = "$vidas" // Eliminado
         tvPuntos.text = "PUNTOS: $puntos"
         record = 112
 
@@ -206,24 +214,14 @@ class JuegoDificilActivity : AppCompatActivity() {
     private fun crearObjetoQueCae() {
         val objeto = ImageView(this)
 
-        // --- INICIO DE LA MODIFICACIÓN ---
-
-        // 1. Definimos el porcentaje de probabilidad (Ej: 60%)
-        // Puedes subir este número si quieres que salga aún más veces.
         val probabilidadDeTarget = 40
-
-        // 2. Tiramos un "dado" de 0 a 99
         val dado = random.nextInt(100)
 
         val imagenParaCaerId = if (dado < probabilidadDeTarget) {
-            // CASO A: Forzamos que salga la forma correcta
             currentTargetDrawableId
         } else {
-            // CASO B: Sale una forma totalmente aleatoria (ruido)
             imagenesJuego[random.nextInt(imagenesJuego.size)]
         }
-
-        // --- FIN DE LA MODIFICACIÓN ---
 
         objeto.setImageResource(imagenParaCaerId)
         objeto.tag = imagenParaCaerId
@@ -268,7 +266,6 @@ class JuegoDificilActivity : AppCompatActivity() {
 
         animator.addListener(object : AnimatorListenerAdapter() {
             override fun onAnimationEnd(animation: Animator) {
-                // Remover de lista
                 animadoresActivos.remove(animation)
 
                 if (cieloContainer.indexOfChild(objeto) != -1) {
@@ -292,30 +289,35 @@ class JuegoDificilActivity : AppCompatActivity() {
         }
     }
 
+    // MODIFICADO: Lógica visual de corazones
     private fun restarVida() {
         vidas--
-        tvVidas.text = "VIDAS: $vidas"
+
+        // Si todavía tenemos vidas dentro del rango de la lista, actualizamos la imagen
+        if (vidas >= 0 && vidas < hearts.size) {
+            hearts[vidas].visibility = View.INVISIBLE
+        }
+
+        // tvVidas.text = "$vidas" // Eliminado
+
         if (vidas <= 0) {
-            tvVidas.text = "¡FIN!"
+            // tvVidas.text = "¡FIN!" // Eliminado
             terminarJuego()
         }
     }
 
-    // --- 7. FIN DEL JUEGO (CORREGIDO) ---
+    // --- 7. FIN DEL JUEGO ---
     private fun terminarJuego() {
         isJuegoActivo = false
 
-        // Limpiar todo
         gameHandler.removeCallbacksAndMessages(null)
 
-        // --- CORRECCIÓN CRASH: Usar copia de la lista ---
         val copiaAnimadores = animadoresActivos.toList()
         for(anim in copiaAnimadores) {
             anim.cancel()
         }
         animadoresActivos.clear()
 
-        // --- LÓGICA FUSIONADA DEL GESTOR DE PARTIDAS ---
         val tiempoJugadoSegundos = ((System.currentTimeMillis() - tiempoInicioPartida) / 1000).toInt()
         gestorPartidas.finalizarPartida(idPartida, puntos, tiempoJugadoSegundos)
 

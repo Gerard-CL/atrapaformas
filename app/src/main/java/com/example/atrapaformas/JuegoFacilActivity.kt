@@ -29,7 +29,7 @@ class JuegoFacilActivity : AppCompatActivity() {
     private var isJuegoActivo = true
     private var isPausado = false
 
-    private lateinit var tvVidas: TextView
+    private lateinit var hearts: List<ImageView>
     private lateinit var tvPuntos: TextView
     private lateinit var ivTargetShape: ImageView
     private lateinit var cieloContainer: ConstraintLayout
@@ -79,6 +79,12 @@ class JuegoFacilActivity : AppCompatActivity() {
         val nombreRecibido = intent.getStringExtra("NOMBRE_JUGADOR")
         val textViewNombre = findViewById<TextView>(R.id.tv_usuario)
         textViewNombre.text = nombreRecibido ?: "Jugador"
+
+        hearts = listOf(
+            findViewById(R.id.heart1),
+            findViewById(R.id.heart2),
+            findViewById(R.id.heart3)
+                       )
 
         // Ajuste de window insets
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.cielo_container)) { v, insets ->
@@ -181,12 +187,9 @@ class JuegoFacilActivity : AppCompatActivity() {
     // 3. INICIALIZACIÓN DE VISTAS
     // ===============================
     private fun inicializarVistas() {
-        tvVidas = findViewById(R.id.tv_vidas)
         tvPuntos = findViewById(R.id.tv_puntos)
         ivTargetShape = findViewById(R.id.iv_target_shape)
         cieloContainer = findViewById(R.id.cielo_container)
-
-        tvVidas.text = "VIDAS: $vidas"
         tvPuntos.text = "PUNTOS: $puntos"
     }
 
@@ -318,9 +321,17 @@ class JuegoFacilActivity : AppCompatActivity() {
 
     private fun restarVida() {
         vidas--
-        tvVidas.text = "VIDAS: $vidas"
+
+        // Si la vida actual está dentro del rango (ej: baja de 3 a 2, ocultamos el índice 2)
+        if (vidas >= 0 && vidas < hearts.size) {
+            // Hacemos el corazón invisible
+            hearts[vidas].visibility = View.INVISIBLE
+
+            // Opcional: Si prefieres que cambie a corazón vacío en vez de desaparecer, usa:
+            // hearts[vidas].setImageResource(R.drawable.heart_empty)
+        }
+
         if (vidas <= 0) {
-            tvVidas.text = "¡FIN!"
             terminarJuego()
         }
     }
