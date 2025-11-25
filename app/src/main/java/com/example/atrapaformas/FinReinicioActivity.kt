@@ -14,7 +14,6 @@ class FinReinicioActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_fin_reinicio)
-        val botonRanking: ImageButton = findViewById(R.id.btn_ver_ranking)
         val botonJugar: ImageButton = findViewById(R.id.btn_play_again)
         val puntosRecibidos = intent.getIntExtra("PUNTUACION_FINAL", 0)
 
@@ -27,13 +26,6 @@ class FinReinicioActivity : AppCompatActivity() {
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
-        }
-
-        botonRanking.setOnClickListener {
-            // Le dices qué hacer:
-            // (Asegúrate de que tu pantalla de ranking se llame "RankingActivity")
-            val intent = Intent(this, RankingActivity::class.java)
-            startActivity(intent)
         }
 
         botonJugar.setOnClickListener {

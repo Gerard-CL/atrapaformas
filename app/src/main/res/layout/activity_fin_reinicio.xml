@@ -68,34 +68,16 @@
         android:id="@+id/btn_play_again"
         android:layout_width="264dp"
         android:layout_height="94dp"
-        android:layout_marginBottom="152dp"
+        android:layout_marginStart="504dp"
+        android:layout_marginBottom="144dp"
         android:background="@android:color/transparent"
         android:contentDescription="Jugar de nuevo"
+
         android:scaleType="fitCenter"
-
         android:src="@drawable/button_jugarotravez"
-        app:layout_constraintBottom_toBottomOf="parent"
 
-        app:layout_constraintEnd_toStartOf="@+id/btn_ver_ranking"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_chainStyle="spread"
         app:layout_constraintStart_toStartOf="parent" />
-
-    <ImageButton
-        android:id="@+id/btn_ver_ranking"
-        android:layout_width="264dp"
-        android:layout_height="94dp"
-
-        android:background="@android:color/transparent"
-
-        android:contentDescription="Ver Ranking"
-        android:scaleType="fitCenter"
-        android:src="@drawable/button_ranking"
-
-        app:layout_constraintBottom_toBottomOf="@+id/btn_play_again"
-        app:layout_constraintEnd_toEndOf="parent"
-
-        app:layout_constraintStart_toEndOf="@+id/btn_play_again"
-        app:layout_constraintTop_toTopOf="@+id/btn_play_again"
-        app:layout_constraintVertical_bias="1.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
