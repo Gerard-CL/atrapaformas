@@ -25,8 +25,9 @@ class JuegoMedioActivity : AppCompatActivity() {
     private var isJuegoActivo = true
     private var isPausado = false
 
-    // CAMBIO 1: Eliminamos tvVidas y añadimos la lista de corazones
-    // private lateinit var tvVidas: TextView
+    // Variable para guardar el nombre y usarlo al final
+    private var nombreJugador: String? = null
+
     private lateinit var hearts: List<ImageView>
 
     private lateinit var tvPuntos: TextView
@@ -60,20 +61,21 @@ class JuegoMedioActivity : AppCompatActivity() {
 
         gestorPartidas = GestorPartidas("${filesDir.path}/partidas")
         idPartida = intent.getStringExtra("ID_PARTIDA") ?: ""
-        val nombreRecibido = intent.getStringExtra("NOMBRE_JUGADOR")
+
+        // Guardamos el nombre en la variable de clase
+        nombreJugador = intent.getStringExtra("NOMBRE_JUGADOR")
+
         tiempoInicioPartida = System.currentTimeMillis()
 
         val textViewNombre = findViewById<TextView>(R.id.tv_usuario)
-        textViewNombre.text = nombreRecibido ?: "Jugador"
+        textViewNombre.text = nombreJugador ?: "Jugador"
 
-        // CAMBIO 2: Inicializamos la lista de corazones buscando sus IDs
         hearts = listOf(
             findViewById(R.id.heart1),
             findViewById(R.id.heart2),
             findViewById(R.id.heart3)
                        )
 
-        // tvVidas = findViewById(R.id.tv_vidas) // ELIMINADO
         tvPuntos = findViewById(R.id.tv_puntos)
         ivTargetShape = findViewById(R.id.iv_target_shape)
         cieloContainer = findViewById(R.id.cielo_container)
@@ -87,7 +89,6 @@ class JuegoMedioActivity : AppCompatActivity() {
             mostrarDialogoPausa()
         }
 
-        // tvVidas.text = "$vidas" // ELIMINADO
         tvPuntos.text = "PUNTOS: $puntos"
         record = 112
 
@@ -95,7 +96,7 @@ class JuegoMedioActivity : AppCompatActivity() {
         iniciarJuego()
     }
 
-    // ... (Métodos de Pausa se mantienen igual) ...
+    // ... Métodos de Pausa ...
     private fun mostrarDialogoPausa() {
         if (!isJuegoActivo) return
         pausarLogicaJuego()
@@ -146,7 +147,7 @@ class JuegoMedioActivity : AppCompatActivity() {
         gameHandler.removeCallbacksAndMessages(null)
     }
 
-    // ... (GameLoop y lógica de formas se mantienen igual) ...
+    // ... GameLoop y Lógica ...
 
     private fun definirGameLoop() {
         gameLoop = object : Runnable {
@@ -247,24 +248,17 @@ class JuegoMedioActivity : AppCompatActivity() {
         if (puntos > record) record = puntos
     }
 
-    // CAMBIO 3: Lógica para ocultar corazones
     private fun restarVida() {
         vidas--
-
-        // Si la vida actual está dentro del rango (ej: baja de 3 a 2, ocultamos el índice 2)
         if (vidas >= 0 && vidas < hearts.size) {
-            // Hacemos el corazón invisible
             hearts[vidas].visibility = View.INVISIBLE
-
-            // Opcional: Si prefieres que cambie a corazón vacío en vez de desaparecer, usa:
-            // hearts[vidas].setImageResource(R.drawable.heart_empty)
         }
-
         if (vidas <= 0) {
             terminarJuego()
         }
     }
 
+    // --- FIN DEL JUEGO ---
     private fun terminarJuego() {
         isJuegoActivo = false
         gameHandler.removeCallbacksAndMessages(null)
@@ -282,6 +276,8 @@ class JuegoMedioActivity : AppCompatActivity() {
                                                         intent.putExtra("PUNTUACION_FINAL", puntos)
                                                         intent.putExtra("ID_PARTIDA", idPartida)
                                                         intent.putExtra("DIFICULTAD", "Medio")
+                                                        intent.putExtra("NOMBRE_JUGADOR", nombreJugador)
+
                                                         startActivity(intent)
                                                         finish()
                                                     }, 0)

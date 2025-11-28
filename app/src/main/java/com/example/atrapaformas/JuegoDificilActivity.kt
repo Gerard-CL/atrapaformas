@@ -27,6 +27,9 @@ class JuegoDificilActivity : AppCompatActivity() {
     private lateinit var hearts: List<ImageView> // Nuevo
 
     private lateinit var tvPuntos: TextView
+    private var nombreJugador: String? = null
+
+
     private lateinit var ivTargetShape: ImageView
     private lateinit var cieloContainer: ConstraintLayout
     private lateinit var btnPause: View
@@ -62,6 +65,8 @@ class JuegoDificilActivity : AppCompatActivity() {
         // 1. Inicializar Gestor
         gestorPartidas = GestorPartidas("${filesDir.path}/partidas")
         idPartida = intent.getStringExtra("ID_PARTIDA") ?: ""
+
+        nombreJugador = intent.getStringExtra("NOMBRE_JUGADOR")
         tiempoInicioPartida = System.currentTimeMillis()
 
         // 2. Música
@@ -336,6 +341,7 @@ class JuegoDificilActivity : AppCompatActivity() {
                                                         intent.putExtra("PUNTUACION_FINAL", puntos)
                                                         intent.putExtra("ID_PARTIDA", idPartida)
                                                         intent.putExtra("DIFICULTAD", "Difícil")
+                                                        intent.putExtra("NOMBRE_JUGADOR", nombreJugador)
                                                         startActivity(intent)
                                                         finish()
                                                     }, 0)
