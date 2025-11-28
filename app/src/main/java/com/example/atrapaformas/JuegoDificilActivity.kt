@@ -259,8 +259,18 @@ class JuegoDificilActivity : AppCompatActivity() {
         val alturaSuelo = cieloContainer.height.toFloat()
         val animator = ObjectAnimator.ofFloat(objeto, "translationY", 0f, alturaSuelo)
 
-        // VELOCIDAD DIFICIL: 2.5 segundos en caer
-        animator.duration = 2500
+
+
+        val duracionCaida: Long = when (puntos) {
+            in 0..50 -> 2500L
+            in 51..100 -> 2000L
+            in 101..150 -> 1600L
+            in 151..200 -> 1300L
+            in 201..300 -> 900L
+            else -> 600L
+        }
+
+        animator.duration = duracionCaida
 
         animadoresActivos.add(animator)
 

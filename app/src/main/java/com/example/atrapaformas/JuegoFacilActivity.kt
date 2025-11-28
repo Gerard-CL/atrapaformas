@@ -289,7 +289,16 @@ class JuegoFacilActivity : AppCompatActivity() {
     private fun animarCaida(objeto: ImageView) {
         val alturaSuelo = cieloContainer.height.toFloat()
         val animator = ObjectAnimator.ofFloat(objeto, "translationY", 0f, alturaSuelo)
-        animator.duration = 6000 // Lento para fácil
+
+
+        val duracionCaida: Long = when (puntos) {
+            in 0..50 -> 6000L
+            in 51..100 -> 5500L
+            in 101..150 -> 400L
+            else -> 4000L
+        }
+
+        animator.duration = duracionCaida
 
         animadoresActivos.add(animator)
 
