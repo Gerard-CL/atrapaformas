@@ -220,7 +220,7 @@ class JuegoMedioActivity : AppCompatActivity() {
         val duracionCaida: Long = when (puntos) {
             in 0..50 -> 4000L
             in 51..100 -> 3500L
-            in 101..150 -> 3000
+            in 101..150 -> 3000L
             else -> 2500L
         }
 

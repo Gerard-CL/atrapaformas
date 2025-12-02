@@ -74,7 +74,7 @@
         android:contentDescription="Jugar de nuevo"
 
         android:scaleType="fitCenter"
-        android:src="@drawable/button_jugarotravez"
+        android:src="@drawable/button_ranking"
 
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_chainStyle="spread"

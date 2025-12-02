@@ -1,5 +1,6 @@
 package com.example.atrapaformas
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageButton
 import android.widget.TextView
@@ -44,7 +45,10 @@ class FinReinicioActivity : AppCompatActivity() {
         botonJugar.setOnClickListener {
             // Cierra esta pantalla. Dependiendo de cómo tengas el flujo,
             // esto volverá al menú principal o cerrará la app.
-            finish()
+            val intent = Intent(this, RankingActivity::class.java)
+
+            // 2. Iniciamos la actividad
+            startActivity(intent)
         }
     }
 }
