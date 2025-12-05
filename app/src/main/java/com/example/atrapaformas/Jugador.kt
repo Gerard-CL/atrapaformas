@@ -14,5 +14,4 @@ data class Jugador(
     val tiempoJuego: Int = 0,
     val fechaJugada: String = TimeUtils.getFecha(),
     val horaApertura: String = TimeUtils.getHora(),
-    val horaFin: String = ""
                   )

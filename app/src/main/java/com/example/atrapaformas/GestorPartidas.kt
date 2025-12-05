@@ -4,12 +4,16 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.io.File
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @Serializable
 data class Partida(
     val id: String,
     val jugador: Jugador,
     val estado: String = "en_curso", // "en_curso", "completada", "abandonada"
+    val fecha: String = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date()),
     val horaFin: String = "" // Añadido para guardar cuándo acabó la partida globalmente
                   )
 
@@ -47,14 +51,13 @@ class GestorPartidas(private val directorio: String = "partidas") {
             val jugadorFinal = partida.jugador.copy(
                 puntuacion = puntuacion,
                 tiempoJuego = tiempoJuego,
-                horaFin = horaActual
-                                                   )
+                )
 
             val partidaFinal = partida.copy(
                 jugador = jugadorFinal,
                 estado = "completada",
                 horaFin = horaActual
-                                           )
+                )
 
             // 3. Guardamos
             guardarPartida(partidaFinal)
