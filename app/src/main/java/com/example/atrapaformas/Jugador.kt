@@ -1,6 +1,6 @@
 package com.example.atrapaformas
 
-import kotlinx.serialization.Serializable
+import kotlinx.serialization.Serializable // Para el JSON
 
 @Serializable
 data class Jugador(
@@ -10,8 +10,9 @@ data class Jugador(
     val dificultad: String,
 
     // Datos automáticos (tienen valor por defecto, no hace falta pasarlos)
-    val puntuacion: Int = 0,
-    val tiempoJuego: Int = 0,
+    var puntuacion: Int = 0,
+    var tiempoJuego: Int = 0,
     val fechaJugada: String = TimeUtils.getFecha(),
     val horaApertura: String = TimeUtils.getHora(),
                   )
+    : java.io.Serializable

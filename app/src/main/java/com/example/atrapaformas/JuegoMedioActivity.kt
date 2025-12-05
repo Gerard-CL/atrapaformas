@@ -45,7 +45,8 @@ class JuegoMedioActivity : AppCompatActivity() {
     private lateinit var gameLoop: Runnable
 
     private lateinit var gestorPartidas: GestorPartidas
-    private var idPartida: String = ""
+    private lateinit var idPartida: String
+    private lateinit var Partida: Partida
     private var tiempoInicioPartida: Long = 0
 
     private val imagenesJuego = listOf(
@@ -60,7 +61,9 @@ class JuegoMedioActivity : AppCompatActivity() {
         setContentView(R.layout.activity_juego_medio)
 
         gestorPartidas = GestorPartidas("${filesDir.path}/partidas")
-        idPartida = intent.getStringExtra("ID_PARTIDA") ?: ""
+        Partida = intent.getSerializableExtra("ID_PARTIDA") as Partida
+        idPartida = Partida.id
+
 
         // Guardamos el nombre en la variable de clase
         nombreJugador = intent.getStringExtra("NOMBRE_JUGADOR")
@@ -269,7 +272,7 @@ class JuegoMedioActivity : AppCompatActivity() {
         animadoresActivos.clear()
 
         val tiempoJugadoSegundos = ((System.currentTimeMillis() - tiempoInicioPartida) / 1000).toInt()
-        gestorPartidas.finalizarPartida(idPartida, puntos, tiempoJugadoSegundos)
+        gestorPartidas.finalizarPartida(Partida, puntos, tiempoJugadoSegundos)
 
         Handler(Looper.getMainLooper()).postDelayed({
                                                         val intent = Intent(this, FinReinicioActivity::class.java)

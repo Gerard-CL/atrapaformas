@@ -51,7 +51,8 @@ class JuegoFacilActivity : AppCompatActivity() {
 
     // --- VARIABLES DE GESTIÓN DE PARTIDA (Fusionadas) ---
     private lateinit var gestorPartidas: GestorPartidas
-    private var idPartida: String = ""
+    private lateinit var idPartida: String
+    private lateinit var Partida: Partida
     private var tiempoInicioPartida: Long = 0
 
     private val imagenesJuego = listOf(
@@ -71,7 +72,8 @@ class JuegoFacilActivity : AppCompatActivity() {
 
         // 1. Inicializar Gestor
         gestorPartidas = GestorPartidas("${filesDir.path}/partidas")
-        idPartida = intent.getStringExtra("ID_PARTIDA") ?: ""
+        Partida = intent.getSerializableExtra("ID_PARTIDA") as Partida
+        idPartida = Partida.id
 
         nombreJugador = intent.getStringExtra("NOMBRE_JUGADOR")
         tiempoInicioPartida = System.currentTimeMillis()
@@ -369,7 +371,7 @@ class JuegoFacilActivity : AppCompatActivity() {
 
         // --- LÓGICA FUSIONADA DEL GESTOR DE PARTIDAS ---
         val tiempoJugadoSegundos = ((System.currentTimeMillis() - tiempoInicioPartida) / 1000).toInt()
-        gestorPartidas.finalizarPartida(idPartida, puntos, tiempoJugadoSegundos)
+        gestorPartidas.finalizarPartida(Partida, puntos, tiempoJugadoSegundos)
 
         Handler(Looper.getMainLooper()).postDelayed({
                                                         val intent = Intent(this, FinReinicioActivity::class.java)
